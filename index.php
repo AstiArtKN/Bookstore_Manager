@@ -1,10 +1,20 @@
 <?php
 date_default_timezone_set('Asia/Ho_Chi_Minh');
-session_start();
+session_start();//tạo mới phiên làm việc hoặc chạy tiếp phiên đã có
 ob_start();//giúp tránh trường hợp bị lỗi khi dùng hàm liên quan header, cookie
 
 require_once './config.php';
+
 require_once './includes/connect.php';
+require_once './includes/database.php';
+require_once './includes/session.php';
+
+// $rel = getOne("SELECT * FROM theloaisach");
+
+// echo '<pre>';
+// print_r($rel);
+// echo '</pre>';
+// die();
 
 
 // thiệt lập phương thức lấy biến truy cập vào thư mục
