@@ -60,15 +60,17 @@ if(!defined('_KTHopLe'))
                                     Remember me
                                 </label>
                             </div>
-                            <a href="#!" class="text-body">quên mật khẩu?</a>
+                            <a href="<?php echo _HOST_URL; ?>?module=auth&action=forgot" class="text-body">quên mật
+                                khẩu?</a>
                         </div>
 
                         <div class="text-center text-lg-start mt-4 pt-2">
                             <button type="button" data-mdb-button-init data-mdb-ripple-init
                                 class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Đăng
                                 nhập</button>
-                            <p class="small fw-bold mt-2 pt-1 mb-0">Bạn không có tài khoản? <a href="#!"
-                                    class="link-danger">Đăng ký</a></p>
+                            <p class="small fw-bold mt-2 pt-1 mb-0">Bạn không có tài khoản? <a
+                                    href="<?php echo _HOST_URL; ?>?module=auth&action=register" class="link-danger">Đăng
+                                    ký</a></p>
                         </div>
 
                     </form>

@@ -127,7 +127,8 @@ if(!defined('_KTHopLe'))
                                 </div>
 
                                 <div class="text-center text-lg-start mt-4 pt-2">
-                                    <p class="small fw-bold mt-2 pt-1 mb-0">Bạn đã có tài khoản? <a href="#!"
+                                    <p class="small fw-bold mt-2 pt-1 mb-0">Bạn đã có tài khoản? <a
+                                            href="<?php echo _HOST_URL; ?>?module=auth&action=login"
                                             class="link-danger">Đăng nhập</a></p>
                                 </div>
 
