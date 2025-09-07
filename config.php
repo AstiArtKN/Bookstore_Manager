@@ -4,7 +4,7 @@ const _KTHopLe = true;
 const _MODULES = 'dashboard';
 const _ACTION = 'index';
 
-echo _KTHopLe;
+//echo _KTHopLe;
 
 //khai báo database
 const _HOST = 'localhost';

@@ -8,7 +8,7 @@ require_once './config.php';
 require_once './includes/connect.php';
 require_once './includes/database.php';
 require_once './includes/session.php';
-
+require_once './templates/layout/index.php';
 // $rel = getOne("SELECT * FROM theloaisach");
 
 // echo '<pre>';
@@ -37,7 +37,7 @@ $path = 'modules/' . $module . '/' . $action . '.php';
 //kiểm tra path có tồn tại, có dữ liệu hay không
 if(!empty($path)){
     if(file_exists($path)){//kiểm tra tồn tại
-        echo 'kết nối thành công';
+        //echo 'kết nối thành công';
         require_once $path;
     }
     else{
