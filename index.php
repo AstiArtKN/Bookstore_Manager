@@ -9,6 +9,14 @@ require_once './includes/connect.php';
 require_once './includes/database.php';
 require_once './includes/session.php';
 require_once './modules/auth/index.php';
+
+//email
+require_once './includes/mailer/Exception.php';
+require_once './includes/mailer/PHPMailer.php';
+require_once './includes/mailer/SMTP.php';
+
+
+require_once './includes/functions.php';
 require_once './templates/layout/index.php';
 // $rel = getOne("SELECT * FROM theloaisach");
 
@@ -17,6 +25,7 @@ require_once './templates/layout/index.php';
 // echo '</pre>';
 // die();
 
+//sendMail('vohaidien70@gmail.com','test mail','nội dung đang đc test ');
 
 // thiệt lập phương thức lấy biến truy cập vào thư mục
 
