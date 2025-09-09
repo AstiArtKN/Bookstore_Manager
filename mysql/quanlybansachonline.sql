@@ -39,11 +39,10 @@ create table NguoiDung
 	email varchar(100) not null,
 	SDT varchar(20) not null,
 	matKhau varchar(100) not null,
-	matKhauBoSung varchar(100) not null,
 	ngaySinh datetime,
 	gioitinhId varchar(10),
-	trangThaiId varchar(10) not null,
-	quyenHanId varchar(100) not null,
+	trangThaiId varchar(10) null,
+	quyenHanId varchar(100) null,
 
 	constraint PK_NguoiDung primary key (ID),
 	constraint UNI_NguoiDung unique (tenNguoiDung)

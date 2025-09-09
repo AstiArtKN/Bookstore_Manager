@@ -3,7 +3,79 @@ if(!defined('_KTHopLe'))
 {
     die('Truy cập không hợp lệ');
 }
+
+if(isPost()){
+    $filter = filterData();
+    $errors = [];
+
+    //validate fullname
+    if(empty(trim($filter['firstName']))){
+        $errors['firstName']['require'] = 'Vui lòng nhập họ của bạn';
+    }
+    // }else{
+        
+    // }
+
+    //validate email
+    if(empty(trim($filter['emailAddress']))){
+        $errors['emailAddress']['require'] = 'Vui lòng nhập email của bạn';
+    }
+    else{
+        // kiểm tra email đúng đinh dạng
+        if(!validateEmail(trim($filter['emailAddress']))){
+             $errors['emailAddress']['isEmail'] = 'Email không đúng định dạng';
+        }
+        else{// kiểm tra email có tồn tại không
+            $email = $filter['emailAddress'];
+
+            $checkEmail = getRows("SELECT * FROM nguoidung WHERE email = '$email' ");
+            if($checkEmail > 0){//email đã tồn tại
+                 $errors['emailAddress']['check'] = 'Email đã tồn tại';
+            }
+        }
+    }
+
+    //validate email phoneNumber
+     if(empty($filter['phoneNumber'])){
+        $errors['phoneNumber']['require'] = 'vui lòng nhập số điện thoại của bạn';
+    }
+    else{
+        if(!isPhone($filter['phoneNumber'])){
+            $errors['phoneNumber']['isPhone'] = 'số điện thoại không đúng định dạng';
+        }
+    }
+
+    //validate pass
+    if(empty($filter['pass'])){
+        $errors['pass']['require'] = 'vui lòng nhập mật khẩu';
+    }
+    else{
+        if(strlen(trim($filter['pass'])) < 6){
+            $errors['pass']['Length'] = 'mật khẩu phải từ 6 ký tự';
+        }
+    }
+    //validate repass
+    if(empty($filter['pass'])){
+        $errors['repass']['require'] = 'vui lòng nhập lại mật khẩu';
+    }
+    else{
+        if(trim($filter['pass']) !== trim($filter['repass'])){
+            $errors['repass']['Like'] = 'mật khẩu nhập lại không khớp';
+        }
+    }
+
+
+    
+    if(!empty($errors)){
+            echo '<pre>';
+            print_r($errors);
+            echo '</pre>';
+    }
+
+
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -26,30 +98,30 @@ if(!defined('_KTHopLe'))
                     <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                         <div class="card-body p-4 p-md-5">
                             <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">ĐĂNG KÝ</h3>
-                            <form>
+                            <form method="POST" action="" enctype="multipart/form-data">
 
                                 <div class="row">
                                     <div class="col-md-6 mb-4">
 
                                         <div data-mdb-input-init class="form-outline">
-                                            <input type="text" id="firstName" class="form-control form-control-lg"
-                                                placeholder="Họ" />
+                                            <input type="text" id="firstName" name="firstName"
+                                                class="form-control form-control-lg" placeholder="Họ" />
                                         </div>
 
                                     </div>
                                     <div class="col-md-6 mb-4">
 
                                         <div data-mdb-input-init class="form-outline">
-                                            <input type="text" id="middleName" class="form-control form-control-lg"
-                                                placeholder="Tên lót" />
+                                            <input type="text" id="middleName" name="middleName"
+                                                class="form-control form-control-lg" placeholder="Tên lót" />
                                         </div>
 
                                     </div>
                                     <div class="col-md-6 mb-4">
 
                                         <div data-mdb-input-init class="form-outline">
-                                            <input type="text" id="lastName" class="form-control form-control-lg"
-                                                placeholder="Tên" />
+                                            <input type="text" id="lastName" name="lastName"
+                                                class="form-control form-control-lg" placeholder="Tên" />
                                         </div>
 
                                     </div>
@@ -59,7 +131,8 @@ if(!defined('_KTHopLe'))
                                     <div class="col-md-6 mb-4 d-flex align-items-center">
 
                                         <div data-mdb-input-init class="form-outline datepicker w-100">
-                                            <input type="date" class="form-control form-control-lg" id="birthdayDate" />
+                                            <input type="date" class="form-control form-control-lg" id="birthdayDate"
+                                                name="birthdayDate" />
                                             <label for="birthdayDate" class="form-label">Ngày Sinh</label>
                                         </div>
 
@@ -69,20 +142,20 @@ if(!defined('_KTHopLe'))
                                         <h6 class="mb-2 pb-1">Giới tính: </h6>
 
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                                id="femaleGender" value="option1" checked />
+                                            <input class="form-check-input" type="radio" name="Radio-gioitinh"
+                                                id="femaleGender" name="femaleGender" value="option1" checked />
                                             <label class="form-check-label" for="femaleGender">Nữ</label>
                                         </div>
 
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                                id="maleGender" value="option2" />
+                                            <input class="form-check-input" type="radio" name="Radio-gioitinh"
+                                                id="maleGender" name="maleGender" value="option2" />
                                             <label class="form-check-label" for="maleGender">Nam</label>
                                         </div>
 
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                                id="otherGender" value="option3" />
+                                            <input class="form-check-input" type="radio" name="Radio-gioitinh"
+                                                id="otherGender" name="otherGender" value="option3" />
                                             <label class="form-check-label" for="otherGender">Khác</label>
                                         </div>
 
@@ -93,7 +166,7 @@ if(!defined('_KTHopLe'))
                                     <div class="col-md-6 mb-4 pb-2">
 
                                         <div data-mdb-input-init class="form-outline">
-                                            <input type="email" id="emailAddress"
+                                            <input type="email" id="emailAddress" name="emailAddress"
                                                 class="form-control form-control-lg" />
                                             <label class="form-label" for="emailAddress">Email</label>
                                         </div>
@@ -102,23 +175,24 @@ if(!defined('_KTHopLe'))
                                     <div class="col-md-6 mb-4 ">
 
                                         <div data-mdb-input-init class="form-outline">
-                                            <input type="tel" id="phoneNumber" class="form-control form-control-lg" />
+                                            <input type="tel" id="phoneNumber" name="phoneNumber"
+                                                class="form-control form-control-lg" />
                                             <label class="form-label" for="phoneNumber">Số Điện Thoại</label>
                                         </div>
 
                                     </div>
                                 </div>
                                 <div data-mdb-input-init class="form-outline mb-3">
-                                    <input type="text" id="namelogin" class="form-control form-control-lg"
-                                        placeholder="tên đăng nhập" />
+                                    <input type="text" id="namelogin" name="namelogin"
+                                        class="form-control form-control-lg" placeholder="tên đăng nhập" />
                                 </div>
                                 <div data-mdb-input-init class="form-outline mb-3">
-                                    <input type="password" id="pass" class="form-control form-control-lg"
+                                    <input type="password" id="pass" name="pass" class="form-control form-control-lg"
                                         placeholder="mật khẩu" />
                                 </div>
                                 <div data-mdb-input-init class="form-outline mb-3">
-                                    <input type="password" id="repass" class="form-control form-control-lg"
-                                        placeholder="nhập lại mật khẩu" />
+                                    <input type="password" id="repass" name="repass"
+                                        class="form-control form-control-lg" placeholder="nhập lại mật khẩu" />
                                 </div>
 
                                 <div class="mt-4 pt-2">
