@@ -3,11 +3,14 @@ if(!defined('_KTHopLe'))
 {
     die('Truy cập không hợp lệ');
 }
+$msg = '';
+$msg_type = '';
 
 if(isPost()){
     $filter = filterData();
     $errors = [];
-
+    
+   
     //validate fullname
     if(empty(trim($filter['firstName']))){
         $errors['firstName']['require'] = 'Vui lòng nhập họ của bạn';
@@ -66,12 +69,18 @@ if(isPost()){
 
 
     
-    if(!empty($errors)){
-            echo '<pre>';
-            print_r($errors);
-            echo '</pre>';
+    // if(!empty($errors)){
+    //         echo '<pre>';
+    //         print_r($errors);
+    //         echo '</pre>';
+    // }
+    if(empty($errors)){
+        $msg = 'Đăng ký thành công';
+        $msg_type = 'success';
+    }else{
+        $msg = 'Dữ liệu không hợp lệ hãy kiểm tra lại';
+        $msg_type = 'danger';
     }
-
 
 }
 ?>
@@ -96,8 +105,10 @@ if(isPost()){
             <div class="row justify-content-center align-items-center h-100">
                 <div class="col-12 col-lg-9 col-xl-7">
                     <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
                         <div class="card-body p-4 p-md-5">
                             <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">ĐĂNG KÝ</h3>
+                            <?php getMsg($msg, $msg_type); ?>
                             <form method="POST" action="" enctype="multipart/form-data">
 
                                 <div class="row">
@@ -127,40 +138,7 @@ if(isPost()){
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-md-6 mb-4 d-flex align-items-center">
 
-                                        <div data-mdb-input-init class="form-outline datepicker w-100">
-                                            <input type="date" class="form-control form-control-lg" id="birthdayDate"
-                                                name="birthdayDate" />
-                                            <label for="birthdayDate" class="form-label">Ngày Sinh</label>
-                                        </div>
-
-                                    </div>
-                                    <div class="col-md-6 mb-4">
-
-                                        <h6 class="mb-2 pb-1">Giới tính: </h6>
-
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="Radio-gioitinh"
-                                                id="femaleGender" name="femaleGender" value="option1" checked />
-                                            <label class="form-check-label" for="femaleGender">Nữ</label>
-                                        </div>
-
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="Radio-gioitinh"
-                                                id="maleGender" name="maleGender" value="option2" />
-                                            <label class="form-check-label" for="maleGender">Nam</label>
-                                        </div>
-
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="Radio-gioitinh"
-                                                id="otherGender" name="otherGender" value="option3" />
-                                            <label class="form-check-label" for="otherGender">Khác</label>
-                                        </div>
-
-                                    </div>
-                                </div>
 
                                 <div class="row">
                                     <div class="col-md-6 mb-4 pb-2">

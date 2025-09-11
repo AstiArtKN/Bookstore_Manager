@@ -204,3 +204,9 @@ echo 'mat khau dung';
     echo 'mat khau khong dung';
     }
 */
+
+function getMsg($msg, $type = 'success'){
+   echo '<div class="annouce-message alert alert-' . $type . '">';
+   echo $msg;
+   echo '</div>';
+}
