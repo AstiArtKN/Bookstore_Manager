@@ -205,8 +205,14 @@ echo 'mat khau dung';
     }
 */
 
+//thông báo lỗi
 function getMsg($msg, $type = 'success'){
    echo '<div class="annouce-message alert alert-' . $type . '">';
    echo $msg;
    echo '</div>';
+}
+
+//hiển thị lỗi
+function formError($errors, $fieldName){
+    return (!empty($errors[$fieldName])) ? '<div class="erro">' .reset($errors[$fieldName]) . ' </div>' : false;
 }

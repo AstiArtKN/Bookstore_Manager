@@ -7,3 +7,7 @@
 .card-registration .select-arrow {
   top: 13px;
 }
+.erro {
+  font-style: italic;
+  color: red;
+}

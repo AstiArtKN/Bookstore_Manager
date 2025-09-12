@@ -11,13 +11,28 @@ if(isPost()){
     $errors = [];
     
    
-    //validate fullname
+    //validate firsNname
     if(empty(trim($filter['firstName']))){
         $errors['firstName']['require'] = 'Vui lòng nhập họ của bạn';
     }
     // }else{
         
     // }
+    //validate middleName
+    if(empty(trim($filter['middleName']))){
+        $errors['middleName']['require'] = 'Vui lòng nhập tên đệm của bạn';
+    }
+    // }else{
+        
+    // }
+    //validate lastName
+    if(empty(trim($filter['lastName']))){
+        $errors['lastName']['require'] = 'Vui lòng nhập tên của bạn';
+    }
+    // }else{
+        
+    // }
+
 
     //validate email
     if(empty(trim($filter['emailAddress']))){
@@ -45,6 +60,25 @@ if(isPost()){
     else{
         if(!isPhone($filter['phoneNumber'])){
             $errors['phoneNumber']['isPhone'] = 'số điện thoại không đúng định dạng';
+        }
+    }
+
+     //validate namelogin
+    if(empty(trim($filter['namelogin']))){
+        $errors['namelogin']['require'] = 'Vui lòng nhập tên tài khoản';
+    }
+    else{
+        // kiểm tra tên tài khoản đúng đinh dạng
+        if(strlen(trim($filter['namelogin'])) < 2){
+             $errors['namelogin']['Length'] = 'Tên tài khoản phải từ 2 ký tự trở lên';
+        }
+        else{// kiểm tra tên tài khoản có tồn tại không
+            $namelogin = $filter['namelogin'];
+
+            $checkEmail = getRows("SELECT * FROM nguoidung WHERE tenNguoiDung = '$namelogin' ");
+            if($checkEmail > 0){//email đã tồn tại
+                 $errors['namelogin']['check'] = 'tài khoản đã tồn tại';
+            }
         }
     }
 
@@ -80,7 +114,11 @@ if(isPost()){
     }else{
         $msg = 'Dữ liệu không hợp lệ hãy kiểm tra lại';
         $msg_type = 'danger';
+
+        setSessionFlash('erros', $errors);
     }
+
+    $errorArr = getSessionFlash('erros');
 
 }
 ?>
@@ -95,7 +133,7 @@ if(isPost()){
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="<?php echo _HOST_URL_TEMPLATES; ?>/assets/css/register.css" />
+    <link rel="stylesheet" href="<?php echo _HOST_URL_TEMPLATES; ?>/assets/css/register.css?ver=<?php rand(); ?>" />
     <title>Đăng ký</title>
 </head>
 
@@ -118,7 +156,7 @@ if(isPost()){
                                             <input type="text" id="firstName" name="firstName"
                                                 class="form-control form-control-lg" placeholder="Họ" />
                                         </div>
-
+                                        <?php echo formError($errorArr, 'firstName')?>
                                     </div>
                                     <div class="col-md-6 mb-4">
 
@@ -126,6 +164,7 @@ if(isPost()){
                                             <input type="text" id="middleName" name="middleName"
                                                 class="form-control form-control-lg" placeholder="Tên lót" />
                                         </div>
+                                        <?php echo formError($errorArr, 'middleName')?>
 
                                     </div>
                                     <div class="col-md-6 mb-4">
@@ -134,6 +173,7 @@ if(isPost()){
                                             <input type="text" id="lastName" name="lastName"
                                                 class="form-control form-control-lg" placeholder="Tên" />
                                         </div>
+                                        <?php echo formError($errorArr, 'lastName')?>
 
                                     </div>
                                 </div>
@@ -148,6 +188,8 @@ if(isPost()){
                                                 class="form-control form-control-lg" />
                                             <label class="form-label" for="emailAddress">Email</label>
                                         </div>
+                                        <?php echo formError($errorArr, 'emailAddress')?>
+
 
                                     </div>
                                     <div class="col-md-6 mb-4 ">
@@ -157,20 +199,27 @@ if(isPost()){
                                                 class="form-control form-control-lg" />
                                             <label class="form-label" for="phoneNumber">Số Điện Thoại</label>
                                         </div>
+                                        <?php echo formError($errorArr, 'phoneNumber')?>
 
                                     </div>
                                 </div>
                                 <div data-mdb-input-init class="form-outline mb-3">
                                     <input type="text" id="namelogin" name="namelogin"
                                         class="form-control form-control-lg" placeholder="tên đăng nhập" />
+
+                                    <div class="erro">
+                                        <?php echo !empty($errorArr['namelogin']) ? reset($errorArr['namelogin']) : false;?>
+                                    </div>
                                 </div>
                                 <div data-mdb-input-init class="form-outline mb-3">
                                     <input type="password" id="pass" name="pass" class="form-control form-control-lg"
                                         placeholder="mật khẩu" />
+                                    <?php echo formError($errorArr, 'pass')?>
                                 </div>
                                 <div data-mdb-input-init class="form-outline mb-3">
                                     <input type="password" id="repass" name="repass"
                                         class="form-control form-control-lg" placeholder="nhập lại mật khẩu" />
+                                    <?php echo formError($errorArr, 'repass')?>
                                 </div>
 
                                 <div class="mt-4 pt-2">
