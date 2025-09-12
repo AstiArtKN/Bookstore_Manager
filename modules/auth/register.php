@@ -115,9 +115,11 @@ if(isPost()){
         $msg = 'Dữ liệu không hợp lệ hãy kiểm tra lại';
         $msg_type = 'danger';
 
+        setSessionFlash('oldData', $filter);
         setSessionFlash('erros', $errors);
     }
 
+    $oldData = getSessionFlash('oldData');
     $errorArr = getSessionFlash('erros');
 
 }
@@ -154,6 +156,7 @@ if(isPost()){
 
                                         <div data-mdb-input-init class="form-outline">
                                             <input type="text" id="firstName" name="firstName"
+                                                value="<?php echo oldData($oldData, 'firstName');?>"
                                                 class="form-control form-control-lg" placeholder="Họ" />
                                         </div>
                                         <?php echo formError($errorArr, 'firstName')?>
@@ -162,6 +165,7 @@ if(isPost()){
 
                                         <div data-mdb-input-init class="form-outline">
                                             <input type="text" id="middleName" name="middleName"
+                                                value="<?php echo oldData($oldData, 'middleName');?>"
                                                 class="form-control form-control-lg" placeholder="Tên lót" />
                                         </div>
                                         <?php echo formError($errorArr, 'middleName')?>
@@ -171,6 +175,7 @@ if(isPost()){
 
                                         <div data-mdb-input-init class="form-outline">
                                             <input type="text" id="lastName" name="lastName"
+                                                value="<?php echo oldData($oldData, 'lastName');?>"
                                                 class="form-control form-control-lg" placeholder="Tên" />
                                         </div>
                                         <?php echo formError($errorArr, 'lastName')?>
@@ -185,6 +190,7 @@ if(isPost()){
 
                                         <div data-mdb-input-init class="form-outline">
                                             <input type="email" id="emailAddress" name="emailAddress"
+                                                value="<?php echo oldData($oldData, 'emailAddress');?>"
                                                 class="form-control form-control-lg" />
                                             <label class="form-label" for="emailAddress">Email</label>
                                         </div>
@@ -196,6 +202,7 @@ if(isPost()){
 
                                         <div data-mdb-input-init class="form-outline">
                                             <input type="tel" id="phoneNumber" name="phoneNumber"
+                                                value="<?php echo oldData($oldData, 'phoneNumber');?>"
                                                 class="form-control form-control-lg" />
                                             <label class="form-label" for="phoneNumber">Số Điện Thoại</label>
                                         </div>
@@ -205,6 +212,7 @@ if(isPost()){
                                 </div>
                                 <div data-mdb-input-init class="form-outline mb-3">
                                     <input type="text" id="namelogin" name="namelogin"
+                                        value="<?php echo oldData($oldData, 'namelogin');?>"
                                         class="form-control form-control-lg" placeholder="tên đăng nhập" />
 
                                     <div class="erro">

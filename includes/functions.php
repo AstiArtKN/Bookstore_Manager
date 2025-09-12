@@ -216,3 +216,8 @@ function getMsg($msg, $type = 'success'){
 function formError($errors, $fieldName){
     return (!empty($errors[$fieldName])) ? '<div class="erro">' .reset($errors[$fieldName]) . ' </div>' : false;
 }
+
+//hàm hiển thị lại giá trị cũ
+function oldData($oldData, $fieldName){
+    return !empty($oldData[$fieldName]) ? $oldData[$fieldName] : null;
+}
