@@ -6,6 +6,8 @@ if(!defined('_KTHopLe'))
 $msg = '';
 $msg_type = '';
 
+
+
 if(isPost()){
     $filter = filterData();
     $errors = [];
@@ -101,6 +103,7 @@ if(isPost()){
         }
     }
 
+
     
     // if(!empty($errors)){
     //         echo '<pre>';
@@ -108,16 +111,21 @@ if(isPost()){
     //         echo '</pre>';
     // }
     if(empty($errors)){
-        
+        $idrand = generateRandomID(10);
+        $activeToken = sha1(uniqid().time());
         //table: users, data
         $data = [
-            'firstName' => $filter['firstName'],
-            'middleName' => $filter['middleName'],
-            'lastName' => $filter['lastName'],
-            'emailAddress' => $filter['emailAddress'],
-            'phoneNumber' => $filter['phoneNumber'],
-            'namelogin' => $filter['namelogin'],
-            'pass' => password_hash( $filter['pass'],PASSWORD_DEFAULT),
+            'ID' => $idrand,
+            'ho' => $filter['firstName'],
+            'tenLot' => $filter['middleName'],
+            'ten' => $filter['lastName'],
+            'email' => $filter['emailAddress'],
+            'SDT' => $filter['phoneNumber'],
+            'tenNguoiDung' => $filter['namelogin'],
+            'matKhau' => password_hash( $filter['pass'],PASSWORD_DEFAULT),
+            'quyenHanId' => 'KH',
+            'active_token' => $activeToken,
+            'create_at' => date('Y:m:d H:i:s')
         ];
         
         // $msg = 'Đăng ký thành công';

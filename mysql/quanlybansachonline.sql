@@ -45,6 +45,7 @@ create table NguoiDung
 	quyenHanId varchar(100) null,
 	forgot_token varchar(500) null,
 	active_token VARCHAR(500) NULL,
+	create_at datetime null,
 
 	constraint PK_NguoiDung primary key (ID),
 	constraint UNI_NguoiDung unique (tenNguoiDung)
@@ -408,9 +409,9 @@ values
 
 Insert into QuyenHan(ID, tenQuyenHan, moTa)
 values
-	('394053f0d6372f568209482af3f0bd36', N'Quản trị viên', N'Giữ quyền cao nhất trong hệ thống'),
-	('20d24420c8216584615ef62e1d931385', N'Biên tập viên', N'Có quyền hạn giới hạn, quản lý sản phẩm, đơn hàng'),
-	('ee11cbb19052e40b07aac0ca060c23ee', N'Người dùng', N'Người dùng có quyền mua và xem sản phẩm,đơn hàng')
+	('QTV', N'Quản trị viên', N'Giữ quyền cao nhất trong hệ thống'),
+	('NV', N'Biên tập viên', N'Có quyền hạn giới hạn, quản lý sản phẩm, đơn hàng'),
+	('KH', N'Người dùng', N'Người dùng có quyền mua và xem sản phẩm,đơn hàng')
 
 
 set dateformat DMY
