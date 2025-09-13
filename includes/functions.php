@@ -20,7 +20,8 @@ function sendMail($emailTo, $subject, $content)
     //Create an instance; passing `true` enables exceptions
 
     $mail = new PHPMailer(true);
-    //nwmt zcuy zmyv spiw
+    //wmaf
+    //dpobbaegfhul
     try {
         //Server settings
         $mail->SMTPDebug = SMTP::DEBUG_OFF;                      //Enable verbose debug output
@@ -28,7 +29,7 @@ function sendMail($emailTo, $subject, $content)
         $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
         $mail->Username   = 'khiemnguyen1350@gmail.com';                     //SMTP username
-        $mail->Password   = 'nwmtzcuyzmyvspiw';                               //SMTP password
+        $mail->Password   = '';                               //SMTP password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
         $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 

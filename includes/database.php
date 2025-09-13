@@ -74,8 +74,8 @@ function insert($table, $data){
     //$dt = ['99', ''];
 
     //thực thi câu lệnh
-    $stm -> execute($data);
-     
+    $rel = $stm -> execute($data);
+    return $rel;
 
 }
 
@@ -99,7 +99,8 @@ function update($table, $data, $condition = ''){
     $tmp = $conn -> prepare($sql);
 
     //thực thi câu lệnh
-    $tmp -> execute($data);
+    $rel = $tmp -> execute($data);
+    return $rel;
 }
 
 //hàm xoá dữ liệu
@@ -114,7 +115,8 @@ function delete($table, $condititon = ''){
     }
     
     $stm = $conn -> prepare($sql);
-    $stm -> execute();
+    $rel = $stm -> execute();
+    return $rel;
 }
 
 //lấy id dữ liệu mới nhất (vừa mới insert)

@@ -116,28 +116,51 @@ if(isPost()){
         //table: users, data
         $data = [
             'ID' => $idrand,
+            'tenNguoiDung' => $filter['namelogin'],
             'ho' => $filter['firstName'],
             'tenLot' => $filter['middleName'],
             'ten' => $filter['lastName'],
             'email' => $filter['emailAddress'],
             'SDT' => $filter['phoneNumber'],
-            'tenNguoiDung' => $filter['namelogin'],
             'matKhau' => password_hash( $filter['pass'],PASSWORD_DEFAULT),
             'quyenHanId' => 'KH',
             'active_token' => $activeToken,
             'create_at' => date('Y:m:d H:i:s')
         ];
+
+        $insertStatus = insert('nguoidung', $data);
+
+        if($insertStatus){
+            $emailTo = $filter['emailAddress'];
+            $subject = 'Kích hoạt tài khoản hệ thống K-BOOKS!';
+            $content = 'chúc mừng bạn đã đăng ký thành công tài khoản tại K-BOOKS, </>';
+            $content .= 'Để kích hoạt tài khoản. Vui lòng click vào đường link bên dưới: </br>';
+            $content .= _HOST_URL . '/?module=auth&action=active&token=' .$activeToken . '</br>';
+            $content .= 'Cảm ơn bạn đã tin tưởng và ủng hộ K-BOOKS!^^';
+            //gửi email
+            sendMail($emailTo,$subject,$content);
+            
+           
+            setSessionFlash('msg', 'Đăng ký thành công, vui lòng kích hoạt tài khoản.');
+            setSessionFlash('msg_type', 'success');
+        }
+        else{
+           setSessionFlash('msg', 'Đăng ký không thành công, vui lòng thử lại sau.');
+           setSessionFlash('msg_type', 'danger');
+        }
         
-        // $msg = 'Đăng ký thành công';
-        // $msg_type = 'success';
+
+        
     }else{
-        $msg = 'Dữ liệu không hợp lệ hãy kiểm tra lại';
-        $msg_type = 'danger';
+        setSessionFlash('msg', 'vui lòng kiểm tra dữ liệu nhập vào.');
+        setSessionFlash('msg_type', 'danger');
 
         setSessionFlash('oldData', $filter);
         setSessionFlash('erros', $errors);
     }
 
+    $msg = getSessionFlash('msg');
+    $msg_type = getSessionFlash('msg_type');
     $oldData = getSessionFlash('oldData');
     $errorArr = getSessionFlash('erros');
 
