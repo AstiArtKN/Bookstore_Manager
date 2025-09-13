@@ -40,14 +40,24 @@ create table NguoiDung
 	SDT varchar(20) not null,
 	matKhau varchar(100) not null,
 	ngaySinh datetime,
-	gioitinhId varchar(10),
-	trangThaiId varchar(10) null,
+	gioitinh varchar(10),
+	trangThai INT null,
 	quyenHanId varchar(100) null,
+	forgot_token varchar(500) null,
+	active_token VARCHAR(500) NULL,
 
 	constraint PK_NguoiDung primary key (ID),
 	constraint UNI_NguoiDung unique (tenNguoiDung)
 )
 
+create table token_login
+(
+	ID INT AUTO_INCREMENT,
+	nguoidung_id varchar(100) null,
+	token varchar(200) null,
+
+	constraint PK_tokenlog_id primary key (ID)
+)
 
 create table QuyenHan
 (
@@ -57,25 +67,6 @@ create table QuyenHan
 
 	constraint PK_QuyenHan primary key (ID),
 	constraint UNI_tenQuyenHan unique (tenQuyenHan)
-)
-
-create table GioiTinh
-(
-	ID varchar(10),
-	tenGioiTinh varchar(200) not null,
-
-	constraint PK_GioiTinh primary key (ID),
-	constraint UNI_tenGioiTinh unique (tenGioiTinh)
-)
-
-create table TrangThaiNguoiDung
-(
-	ID varchar(10),
-	tenTrangThai varchar(200) not null,
-	moTa text,
-
-    constraint PK_TrangThaiNguoiDung primary key (ID),
-	constraint UNI_tenTrangThaiND unique (tenTrangThai)
 )
 
 -- +/ Phần tài khoản người dùng và người quản trị
@@ -324,14 +315,12 @@ create table HoaDonChiTiet
 -- + Các ràng buộc liên quan phần người dùng và quản trị
 
 alter table NguoiDung
-add constraint FK_NguoiDung_GioiTinh foreign key (gioitinhId) references GioiTinh (ID)
-
-alter table NguoiDung
-add constraint FK_NguoiDung_TrangThaiNguoiDung foreign key (trangThaiId) references TrangThaiNguoiDung (ID)
-
-alter table NguoiDung
 add constraint FK_NguoiDung_QuyenHan foreign key (quyenHanId) references QuyenHan (ID)
 
+--+/ các ràng buộc token_login
+
+alter table token_login
+add constraint fk_NguoiDung_Token_login foreign key (nguoidung_id) references NguoiDung(ID)
 
 -- +/ Các ràng buộc liên quan phần người dùng và quản trị
 
@@ -405,12 +394,6 @@ add constraint FK_HoaDonChiTiet_HoaDon foreign key (hoaDonId) references HoaDon 
 
 -------------------------------------------------------------------------------------------------
 -- Thêm dữ liệu
-
-Insert into GioiTinh(ID, tenGioiTinh)
-values
-	('GT1', N'Nam'),
-	('GT2', N'Nữ'),
-	('GT3', N'Không xác định')
 
 
 
