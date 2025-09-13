@@ -84,6 +84,11 @@ function update($table, $data, $condition = ''){
     global $conn;
     $update = '';
 
+    //--------------------
+    // $dataSet = $data;
+    // unset($dataSet['ID']);
+    //--------------------
+
     foreach ($data as $key => $value){
         $update .= $key . '=:' .$key . ',';
     }
@@ -125,3 +130,48 @@ function lastID(){
 
     return $conn -> lastInsertId();
 }
+
+//update unset ID varchar
+function update_VarChar_ID($table, $data, $condition = '', $ignoreKeys = []) {
+    global $conn;
+
+    // Loại bỏ các cột không muốn update (vd: ID, created_at,...)
+    foreach ($ignoreKeys as $key) {
+        unset($data[$key]);
+    }
+
+    // Ghép cặp key=:key
+    $update = '';
+    foreach ($data as $key => $value) {
+        $update .= $key . '=:' .$key . ',';
+    }
+    $update = rtrim($update, ',');
+
+    // Xây dựng SQL
+    $sql = "UPDATE $table SET $update";
+    if (!empty($condition)) {
+        $sql .= " WHERE $condition";
+    }
+
+    $stmt = $conn->prepare($sql);
+
+    // Thực thi
+    return $stmt->execute($data);
+}
+
+//-------------- -----HOW TO USE IT ------------------------------
+// --------------------------------------------------------------
+// $data = [
+//     'trangThai' => 1,
+//     'active_token' => null,
+//     'update_at' => date('Y-m-d H:i:s'),
+//     'ID' => 'USR12345' // ID kiểu VARCHAR
+// ];
+
+// $condition = "ID = :ID";
+
+// // Gọi update, bỏ qua ID trong phần SET
+// update_VarChar_ID('nguoidung', $data, $condition, ['ID']);
+
+//-------------- -------HOW TO USE IT ------------------------------
+//----------------------------------------------------------------------
