@@ -101,7 +101,6 @@ if(isPost()){
         }
     }
 
-
     
     // if(!empty($errors)){
     //         echo '<pre>';
@@ -109,8 +108,20 @@ if(isPost()){
     //         echo '</pre>';
     // }
     if(empty($errors)){
-        $msg = 'Đăng ký thành công';
-        $msg_type = 'success';
+        
+        //table: users, data
+        $data = [
+            'firstName' => $filter['firstName'],
+            'middleName' => $filter['middleName'],
+            'lastName' => $filter['lastName'],
+            'emailAddress' => $filter['emailAddress'],
+            'phoneNumber' => $filter['phoneNumber'],
+            'namelogin' => $filter['namelogin'],
+            'pass' => password_hash( $filter['pass'],PASSWORD_DEFAULT),
+        ];
+        
+        // $msg = 'Đăng ký thành công';
+        // $msg_type = 'success';
     }else{
         $msg = 'Dữ liệu không hợp lệ hãy kiểm tra lại';
         $msg_type = 'danger';

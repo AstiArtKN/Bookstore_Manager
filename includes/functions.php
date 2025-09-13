@@ -205,6 +205,23 @@ echo 'mat khau dung';
     }
 */
 
+//sinh trường ID ngẫu nhiên
+function generateRandomID($length = 20) {
+    // tập ký tự cho phép
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomID = '';
+
+    for ($i = 0; $i < $length; $i++) {
+        // lấy ngẫu nhiên 1 ký tự trong $characters
+        $index = random_int(0, $charactersLength - 1); // random_int an toàn mật mã học
+        $randomID .= $characters[$index];
+    }
+
+    return $randomID;
+}
+
+
 //thông báo lỗi
 function getMsg($msg, $type = 'success'){
    echo '<div class="annouce-message alert alert-' . $type . '">';
