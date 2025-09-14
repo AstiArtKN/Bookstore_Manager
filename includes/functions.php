@@ -3,6 +3,15 @@ if(!defined('_KTHopLe'))
 {
     die('Truy cập không hợp lệ');
 }
+
+function layout($layOutName, $data = []){
+    if(file_exists(PATH_URL_TEMPLATES . '/layout' . $layOutName . '.php'))
+    {
+        require_once PATH_URL_TEMPLATES . '/layout' . $layOutName . '.php';
+    }
+}
+
+
 //echo 'Trang includes';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;

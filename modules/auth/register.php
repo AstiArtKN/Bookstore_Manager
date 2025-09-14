@@ -3,10 +3,6 @@ if(!defined('_KTHopLe'))
 {
     die('Truy cập không hợp lệ');
 }
-$msg = '';
-$msg_type = '';
-
-
 
 if(isPost()){
     $filter = filterData();
@@ -190,71 +186,87 @@ if(isPost()){
 
                         <div class="card-body p-4 p-md-5">
                             <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">ĐĂNG KÝ</h3>
-                            <?php getMsg($msg, $msg_type); ?>
+                            <?php 
+                                if(!empty($msg) && !empty($msg_type)){
+                                    getMsg($msg, $msg_type); 
+                                }
+                                
+                            ?>
                             <form method="POST" action="" enctype="multipart/form-data">
 
                                 <div class="row">
                                     <div class="col-md-6 mb-4">
 
                                         <div data-mdb-input-init class="form-outline">
-                                            <input type="text" id="firstName" name="firstName"
-                                                value="<?php echo oldData($oldData, 'firstName');?>"
-                                                class="form-control form-control-lg" placeholder="Họ" />
+                                            <input type="text" id="firstName" name="firstName" value="<?php 
+                                                    if(!empty($oldData)){
+                                                        echo oldData($oldData, 'firstName');
+                                                    }
+                                                    
+                                                ?>" class="form-control form-control-lg" placeholder="Họ" />
                                         </div>
-                                        <?php echo formError($errorArr, 'firstName')?>
+                                        <?php 
+                                            if(!empty($errorArr)){
+                                                        echo formError($errorArr, 'firstName');
+                                                    }
+                                        ?>
                                     </div>
                                     <div class="col-md-6 mb-4">
 
                                         <div data-mdb-input-init class="form-outline">
-                                            <input type="text" id="middleName" name="middleName"
-                                                value="<?php echo oldData($oldData, 'middleName');?>"
-                                                class="form-control form-control-lg" placeholder="Tên lót" />
+                                            <input type="text" id="middleName" name="middleName" value="<?php if(!empty($oldData)){
+                                                        echo oldData($oldData, 'middleName');
+                                                    }?>" class="form-control form-control-lg" placeholder="Tên lót" />
                                         </div>
-                                        <?php echo formError($errorArr, 'middleName')?>
+                                        <?php if(!empty($errorArr)){
+                                                        echo formError($errorArr, 'middleName');
+                                                    }?>
 
                                     </div>
                                     <div class="col-md-6 mb-4">
 
                                         <div data-mdb-input-init class="form-outline">
-                                            <input type="text" id="lastName" name="lastName"
-                                                value="<?php echo oldData($oldData, 'lastName');?>"
+                                            <input type="text" id="lastName" name="lastName" value="<?php if(!empty($oldData)){
+                                                        echo oldData($oldData, 'lastName');}?>"
                                                 class="form-control form-control-lg" placeholder="Tên" />
                                         </div>
-                                        <?php echo formError($errorArr, 'lastName')?>
+                                        <?php if(!empty($errorArr)){
+                                                        echo formError($errorArr, 'lastName');
+                                                    }?>
 
                                     </div>
                                 </div>
-
-
-
                                 <div class="row">
                                     <div class="col-md-6 mb-4 pb-2">
 
                                         <div data-mdb-input-init class="form-outline">
-                                            <input type="email" id="emailAddress" name="emailAddress"
-                                                value="<?php echo oldData($oldData, 'emailAddress');?>"
+                                            <input type="email" id="emailAddress" name="emailAddress" value="<?php if(!empty($oldData)){
+                                                        echo oldData($oldData, 'emailAddress');}?>"
                                                 class="form-control form-control-lg" />
                                             <label class="form-label" for="emailAddress">Email</label>
                                         </div>
-                                        <?php echo formError($errorArr, 'emailAddress')?>
+                                        <?php if(!empty($errorArr)){
+                                                        echo formError($errorArr, 'emailAddress');
+                                                    }?>
 
 
                                     </div>
                                     <div class="col-md-6 mb-4 ">
 
                                         <div data-mdb-input-init class="form-outline">
-                                            <input type="tel" id="phoneNumber" name="phoneNumber"
-                                                value="<?php echo oldData($oldData, 'phoneNumber');?>"
+                                            <input type="tel" id="phoneNumber" name="phoneNumber" value="<?php if(!empty($oldData)){
+                                                        echo oldData($oldData, 'phoneNumber');}?>"
                                                 class="form-control form-control-lg" />
                                             <label class="form-label" for="phoneNumber">Số Điện Thoại</label>
                                         </div>
-                                        <?php echo formError($errorArr, 'phoneNumber')?>
-
+                                        <?php if(!empty($errorArr)){
+                                                        echo formError($errorArr, 'phoneNumber');
+                                                    }?>
                                     </div>
                                 </div>
                                 <div data-mdb-input-init class="form-outline mb-3">
-                                    <input type="text" id="namelogin" name="namelogin"
-                                        value="<?php echo oldData($oldData, 'namelogin');?>"
+                                    <input type="text" id="namelogin" name="namelogin" value="<?php  if(!empty($oldData)){
+                                                        echo oldData($oldData, 'namelogin');}?>"
                                         class="form-control form-control-lg" placeholder="tên đăng nhập" />
 
                                     <div class="erro">
@@ -264,12 +276,16 @@ if(isPost()){
                                 <div data-mdb-input-init class="form-outline mb-3">
                                     <input type="password" id="pass" name="pass" class="form-control form-control-lg"
                                         placeholder="mật khẩu" />
-                                    <?php echo formError($errorArr, 'pass')?>
+                                    <?php if(!empty($errorArr)){
+                                                        echo formError($errorArr, 'pass');
+                                                    }?>
                                 </div>
                                 <div data-mdb-input-init class="form-outline mb-3">
                                     <input type="password" id="repass" name="repass"
                                         class="form-control form-control-lg" placeholder="nhập lại mật khẩu" />
-                                    <?php echo formError($errorArr, 'repass')?>
+                                    <?php if(!empty($errorArr)){
+                                                        echo formError($errorArr, 'repass');
+                                                    }?>
                                 </div>
 
                                 <div class="mt-4 pt-2">
