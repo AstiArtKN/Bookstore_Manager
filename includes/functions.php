@@ -248,3 +248,19 @@ function formError($errors, $fieldName){
 function oldData($oldData, $fieldName){
     return !empty($oldData[$fieldName]) ? $oldData[$fieldName] : null;
 }
+
+// redirect('http://localhost/D_A_Manager_BookStore/?module=auth&action=login')
+//redirect('?module=auth&action=login')
+
+
+//hàm chuyển hướng
+function redirect($path, $pathFull = false){
+    if($pathFull){
+        header("Location: $path");
+        exit();
+    }else{
+        $url = _HOST_URL . $path;
+        header("Location: $url");
+        exit();
+    }
+}

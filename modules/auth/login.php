@@ -3,7 +3,96 @@ if(!defined('_KTHopLe'))
 {
     die('Truy cập không hợp lệ');
 }
+
+/*
+-validate dữ liệu nhập
+-ktra dữ liệu với database
+-dữ liệu khớp token_login -> insert vào bảng token_login
+-điều hướng ->>>>[]
+*/
+if(isPost()){
+    $filter = filterData();
+    $errors = [];
+    //validate email
+    if(empty(trim($filter['name_email']))){
+        $errors['name_email']['require'] = 'Vui lòng nhập email hoặc tên đăng nhập của bạn';
+    }
+    // else{}   
+    //validate pass
+    if(empty($filter['pass'])){
+        $errors['pass']['require'] = 'vui lòng nhập mật khẩu';
+    }
+    else{
+        if(strlen(trim($filter['pass'])) < 6){
+            $errors['pass']['Length'] = 'mật khẩu phải từ 6 ký tự';
+        }
+    }
+
+    if(empty($errors)){
+        //kiểm tra dữ liệu
+        $nameEmail = $filter['name_email'];
+        $password = $filter['pass'];
+
+        //nếu là email
+        // kiểm tra email đúng đinh dạng
+        if(validateEmail(trim($filter['name_email']))){
+            $checkLoginName = getOne("SELECT * FROM nguoidung WHERE email = '$nameEmail'");
+        }
+        //nếu là tên đăng nhập
+        else{
+            $checkLoginName = getOne("SELECT * FROM nguoidung WHERE tenNguoiDung = '$nameEmail'");
+        }
+        if(!empty($checkLoginName)){
+            if(!empty($password)){
+                $kiemtraMatKhau = password_verify($password,  $checkLoginName['matKhau']);
+                if($kiemtraMatKhau){
+                    //tạo token và insert vào bảng token_login
+                    $token = sha1(uniqid().time());
+                    $data = [
+                        'token' => $token,
+                        'create_at' => date('Y:m:d H:i:s'),
+                        'nguoidung_id' => $checkLoginName['ID']
+                    ];
+                    $inserToken = insert('token_login',$data);
+                    if($inserToken){
+                        setSessionFlash('msg', 'Đăng nhập thành công.');
+                        setSessionFlash('msg_type', 'success');
+                        redirect('/');
+                    }
+                    else{
+                        setSessionFlash('msg', 'Đăng nhập không thành công.');
+                        setSessionFlash('msg_type', 'danger');
+                    }
+                }else{
+                    setSessionFlash('msg', 'Tên đăng nhập hoặc mật khẩu sai');
+                    setSessionFlash('msg_type', 'danger');
+                }     
+            }
+        }
+        else{
+            setSessionFlash('msg', 'vui lòng kiểm tra dữ liệu nhập vào.');
+            setSessionFlash('msg_type', 'danger');
+        }
+    }
+    else{
+        setSessionFlash('msg', 'vui lòng kiểm tra dữ liệu nhập vào.');
+        setSessionFlash('msg_type', 'danger');
+
+        setSessionFlash('oldData', $filter);
+        setSessionFlash('erros', $errors);
+    }
+
+
+
+    $msg = getSessionFlash('msg');
+    $msg_type = getSessionFlash('msg_type');
+    $oldData = getSessionFlash('oldData');
+    $errorArr = getSessionFlash('erros');
+
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -27,7 +116,13 @@ if(!defined('_KTHopLe'))
                         alt="Sample image">
                 </div>
                 <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                    <form>
+                    <?php 
+                                if(!empty($msg) && !empty($msg_type)){
+                                    getMsg($msg, $msg_type); 
+                                }
+                                
+                            ?>
+                    <form method="POST" action="" enctype="multipart/form-data">
                         <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                             <p class="lead fw-normal mb-0 me-3">ĐĂNG NHẬP</p>
 
@@ -40,14 +135,29 @@ if(!defined('_KTHopLe'))
 
                         <!-- Email input -->
                         <div data-mdb-input-init class="form-outline mb-4">
-                            <input type="email" id="email" class="form-control form-control-lg"
-                                placeholder="Email hoặc tên đăng nhập" />
+                            <input type="text" id="name_email" name="name_email" class="form-control form-control-lg"
+                                value="<?php 
+                                                    if(!empty($oldData)){
+                                                        echo oldData($oldData, 'name_email');
+                                                    }
+                                                    
+                                                ?>" placeholder=" Email hoặc tên đăng nhập" />
+                            <?php 
+                                if(!empty($errorArr)){
+                                    echo formError($errorArr, 'name_email');
+                                }
+                                ?>
                         </div>
 
                         <!-- Password input -->
                         <div data-mdb-input-init class="form-outline mb-3">
-                            <input type="password" id="pass" class="form-control form-control-lg"
+                            <input type="password" id="pass" name="pass" class="form-control form-control-lg"
                                 placeholder="mật khẩu" />
+                            <?php 
+                                if(!empty($errorArr)){
+                                    echo formError($errorArr, 'pass');
+                                }
+                                ?>
                         </div>
 
 
@@ -65,7 +175,7 @@ if(!defined('_KTHopLe'))
                         </div>
 
                         <div class="text-center text-lg-start mt-4 pt-2">
-                            <button type="button" data-mdb-button-init data-mdb-ripple-init
+                            <button type="submit" data-mdb-button-init data-mdb-ripple-init
                                 class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Đăng
                                 nhập</button>
                             <p class="small fw-bold mt-2 pt-1 mb-0">Bạn không có tài khoản? <a
