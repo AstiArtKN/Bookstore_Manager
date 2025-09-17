@@ -3,6 +3,72 @@ if(!defined('_KTHopLe'))
 {
     die('Truy cập không hợp lệ');
 }
+
+
+if(isPost()){
+    $filter = filterData();
+    $errors = [];
+
+       //validate email
+    if(empty(trim($filter['emailAddress']))){
+        $errors['emailAddress']['require'] = 'Vui lòng nhập email của bạn';
+    }
+    else{
+        // kiểm tra email đúng đinh dạng
+        if(!validateEmail(trim($filter['emailAddress']))){
+             $errors['emailAddress']['isEmail'] = 'Email không đúng định dạng';
+        }
+    }
+
+    if(empty($errors)){
+        //xử lý và gửi mail
+        if(!empty($filter['emailAddress'])){
+            $email = $filter['emailAddress'];
+
+            $checkmail = getOne("SELECT * FROM nguoidung WHERE email = '$email'");
+            if(!empty($checkmail)){
+                //update forgot token vaof bangr user
+                $forgot_token = sha1(uniqid().time());
+                $data = [
+                    'forgot_token' => $forgot_token
+                ];
+                $user_id = "ID = " . "'" .$checkmail['ID'] ."'";
+                $updateStatus = update('nguoidung', $data, $user_id);
+                if($updateStatus){
+                    $emailTo = $email;
+                    $subject = 'THAY ĐỔI MẬT KHẨU TẠI K-BOOKS';
+                    $content = 'bạn đang thay đổi mật khẩu tại K-BOOKS, </>';
+                    $content .= 'Để thay đổi mật khẩu. Vui lòng click vào đường link bên dưới: </br>';
+                    $content .= _HOST_URL . '/?module=auth&action=reset&token=' .$forgot_token . '</br>';
+                    $content .= 'Cảm ơn bạn đã tin tưởng và ủng hộ K-BOOKS!^^';
+                    //gửi email
+                    sendMail($emailTo,$subject,$content);
+            
+           
+                    setSessionFlash('msg', 'Gửi yêu cầu thành công. Vui lòng kiểm tra email.');
+                    setSessionFlash('msg_type', 'success');
+                }
+                else{
+                    setSessionFlash('msg', 'đã có lỗi xảy ra, vui lòng thử lại sau.');
+                    setSessionFlash('msg_type', 'danger');
+                }
+            }
+        }
+    }
+    else{
+        setSessionFlash('msg', 'vui lòng kiểm tra dữ liệu nhập vào.');
+        setSessionFlash('msg_type', 'danger');
+
+        setSessionFlash('oldData', $filter);
+        setSessionFlash('errors', $errors);
+    }
+
+}
+
+    $msg = getSessionFlash('msg');
+    $msg_type = getSessionFlash('msg_type');
+    $oldData = getSessionFlash('oldData');
+    $errorArr = getSessionFlash('errors');
 ?>
 
 <!DOCTYPE html>
@@ -27,26 +93,32 @@ if(!defined('_KTHopLe'))
                         alt="Sample image">
                 </div>
                 <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                    <form>
+                    <form method="POST" action="" enctype="multipart/form-data">
+                        <?php 
+                                if(!empty($msg) && !empty($msg_type)){
+                                    getMsg($msg, $msg_type); 
+                                }
+                                
+                            ?>
                         <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                             <p class="lead fw-normal mb-0 me-3">Nhập Email để xác nhận lấy lại mật khẩu</p>
-
-
                         </div>
 
                         <div class="divider d-flex align-items-center my-4">
-
                         </div>
 
                         <!-- Email input -->
                         <div data-mdb-input-init class="form-outline mb-4">
-                            <input type="email" id="email" class="form-control form-control-lg" placeholder="Email" />
+                            <input type="email" id="emailAddress" name="emailAddress" value="<?php if(!empty($oldData)){
+                                                        echo oldData($oldData, 'emailAddress');}?>"
+                                class="form-control form-control-lg" placeholder="Email" />
+
+                            <?php if(!empty($errorArr)){
+                                echo formError($errorArr, 'emailAddress');
+                                }?>
                         </div>
-
-
-
                         <div class="text-center text-lg-start mt-4 pt-2">
-                            <button type="button" data-mdb-button-init data-mdb-ripple-init
+                            <button type="submit" data-mdb-button-init data-mdb-ripple-init
                                 class="btn btn-primary btn-lg"
                                 style="padding-left: 2.5rem; padding-right: 2.5rem;">Gửi</button>
                             <p class="small fw-bold mt-2 pt-1 mb-0"> bạn chưa có tài khoản? <a
