@@ -264,3 +264,22 @@ function redirect($path, $pathFull = false){
         exit();
     }
 }
+
+//hàm check login
+function isLogin(){
+    $checklogin = false;
+    $tokenlogin = getSessionFlash('token_login');
+    $checkToken_login = getOne("SELECT * FROM token_login WHERE token = '$tokenlogin'");
+    if(!empty($checkToken_login)){
+        $checklogin = true;
+    }else{
+        removeSession('token_login');
+    }
+
+    if(!$checkToken_login){
+        redirect('?module=auth&action=login');
+    }
+
+    return $checklogin;
+    
+}

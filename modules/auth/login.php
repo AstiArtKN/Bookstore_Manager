@@ -7,8 +7,15 @@ if(!defined('_KTHopLe'))
 /*
 -validate dữ liệu nhập
 -ktra dữ liệu với database
--dữ liệu khớp token_login -> insert vào bảng token_login
+-dữ liệu khớp token_login -> insert vào bảng token_login 
+
+
+-kiểm tra đăng nhập:
++gán token login lên session
++trong header -> lấy token từ session -> so sách trong bảng token_login
++nếu đúng thì đến trang đích, không đúng thì về trang login
 -điều hướng ->>>>[]
+-đăng nhập tài khoản ở 1 nơi tại một thời điểm
 */
 if(isPost()){
     $filter = filterData();
@@ -34,7 +41,6 @@ if(isPost()){
         $password = $filter['pass'];
 
         //nếu là email
-        // kiểm tra email đúng đinh dạng
         if(validateEmail(trim($filter['name_email']))){
             $checkLoginName = getOne("SELECT * FROM nguoidung WHERE email = '$nameEmail'");
         }
@@ -46,8 +52,22 @@ if(isPost()){
             if(!empty($password)){
                 $kiemtraMatKhau = password_verify($password,  $checkLoginName['matKhau']);
                 if($kiemtraMatKhau){
-                    //tạo token và insert vào bảng token_login
+                    //TK chỉ login ở một nơi
+                    $nguoidung_Id = $checkLoginName['ID'];
+                    
+                    $checkAlready = getRows("SELECT * FROM token_login WHERE nguoidung_id = '$nguoidung_Id'");
+                    if($checkAlready > 0){
+                        setSessionFlash('msg', 'Tài khoản đang được đăng nhập ở nơi khác. Vui lòng thử lại sau.');
+                        setSessionFlash('msg_type', 'danger');
+                        redirect('?module=auth&action=login');
+                    }
+                   else{
+                     //tạo token và insert vào bảng token_login
                     $token = sha1(uniqid().time());
+
+                    //gán token lên session
+                    setSessionFlash('token_login', $token);
+
                     $data = [
                         'token' => $token,
                         'create_at' => date('Y:m:d H:i:s'),
@@ -63,6 +83,7 @@ if(isPost()){
                         setSessionFlash('msg', 'Đăng nhập không thành công.');
                         setSessionFlash('msg_type', 'danger');
                     }
+                   }
                 }else{
                     setSessionFlash('msg', 'Tên đăng nhập hoặc mật khẩu sai');
                     setSessionFlash('msg_type', 'danger');
@@ -79,17 +100,13 @@ if(isPost()){
         setSessionFlash('msg_type', 'danger');
 
         setSessionFlash('oldData', $filter);
-        setSessionFlash('erros', $errors);
+        setSessionFlash('errors', $errors);
     }
-
-
-
+}
     $msg = getSessionFlash('msg');
     $msg_type = getSessionFlash('msg_type');
     $oldData = getSessionFlash('oldData');
-    $errorArr = getSessionFlash('erros');
-
-}
+    $errorArr = getSessionFlash('errors');
 ?>
 
 
@@ -116,13 +133,14 @@ if(isPost()){
                         alt="Sample image">
                 </div>
                 <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                    <?php 
+
+                    <form method="POST" action="" enctype="multipart/form-data">
+                        <?php 
                                 if(!empty($msg) && !empty($msg_type)){
                                     getMsg($msg, $msg_type); 
                                 }
                                 
                             ?>
-                    <form method="POST" action="" enctype="multipart/form-data">
                         <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                             <p class="lead fw-normal mb-0 me-3">ĐĂNG NHẬP</p>
 
