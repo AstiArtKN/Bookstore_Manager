@@ -4,9 +4,7 @@ if(!defined('_KTHopLe'))
     die('Truy cập không hợp lệ');
 }
 
-if(!isLogin()){
-    redirect('?module=auth&action=login');
-}
+
 
 ?>
 

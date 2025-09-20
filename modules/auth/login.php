@@ -4,6 +4,21 @@ if(!defined('_KTHopLe'))
     die('Truy cập không hợp lệ');
 }
 
+// Nếu đã đăng nhập rồi thì chuyển hướng ra trang chủ
+if (getSession('token_login')) {
+    $tokenlogin = getSession('token_login');
+    $checkToken_login = getOne("SELECT * FROM token_login WHERE token = '$tokenlogin'");
+    
+    if (!empty($checkToken_login)) {
+        // Đã đăng nhập hợp lệ
+        redirect('/');
+        exit;
+    } else {
+        // Token không còn hợp lệ => xoá session
+        removeSession('token_login');
+    }
+}
+
 /*
 -validate dữ liệu nhập
 -ktra dữ liệu với database
@@ -66,7 +81,8 @@ if(isPost()){
                     $token = sha1(uniqid().time());
 
                     //gán token lên session
-                    setSessionFlash('token_login', $token);
+                    //setSessionFlash('token_login', $token);
+                    setSession('token_login', $token);
 
                     $data = [
                         'token' => $token,
@@ -75,9 +91,14 @@ if(isPost()){
                     ];
                     $inserToken = insert('token_login',$data);
                     if($inserToken){
-                        setSessionFlash('msg', 'Đăng nhập thành công.');
-                        setSessionFlash('msg_type', 'success');
-                        redirect('/');
+                        if($checkLoginName['quyenHanId']==="QTV" || $checkLoginName['quyenHanId']==="NV"){
+                            redirect('/');
+                        }
+                        else{
+                            redirect('?module=Store&action=index');
+                        }
+                        
+                        
                     }
                     else{
                         setSessionFlash('msg', 'Đăng nhập không thành công.');

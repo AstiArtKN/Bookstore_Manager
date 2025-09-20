@@ -268,7 +268,8 @@ function redirect($path, $pathFull = false){
 //hàm check login
 function isLogin(){
     $checklogin = false;
-    $tokenlogin = getSessionFlash('token_login');
+    //$tokenlogin = getSessionFlash('token_login');
+    $tokenlogin = getSession('token_login');
     $checkToken_login = getOne("SELECT * FROM token_login WHERE token = '$tokenlogin'");
     if(!empty($checkToken_login)){
         $checklogin = true;
