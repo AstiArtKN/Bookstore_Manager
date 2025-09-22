@@ -109,7 +109,7 @@ function update($table, $data, $condition = ''){
 }
 
 //hàm xoá dữ liệu
-function delete($table, $condititon = ''){
+function delete($table, $condition = ''){
     global $conn;
     //$sql = "DELETE FROM theLoaiSach WHERE ID = :ID";
      if(!empty($condition)){
