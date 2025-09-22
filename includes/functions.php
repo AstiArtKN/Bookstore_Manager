@@ -284,3 +284,34 @@ function isLogin(){
     return $checklogin;
     
 }
+
+
+//lấy thông tin người dùng đăng nhập
+function getCurrentUserFromToken() {
+    // đảm bảo có getSession() và getOne() sẵn
+    $token = getSession('token_login');
+    if (empty($token)) return null;
+
+    // tìm token trong DB
+    $row = getOne("SELECT nguoidung.ID,
+    nguoidung.tenNguoiDung,
+    nguoidung.ho,
+    nguoidung.tenLot,
+    nguoidung.ten,
+    nguoidung.email,
+    nguoidung.SDT FROM token_login
+    INNER JOIN nguoidung ON nguoidung.ID = token_login.nguoidung_id
+     WHERE token = '$token'");
+     
+    if (empty($row)) {
+        // token không hợp lệ -> xoá session
+        removeSession('token_login');
+        return null;
+    }
+
+    // // lấy user theo id
+    // $userId = $row['nguoidung_id']; // theo cấu trúc của bạn
+    // $user = getOne("SELECT ID, tenNguoiDung, tenLot, ten, email, quyenHanId FROM nguoidung WHERE ID = :id", ['id' => $userId]);
+
+    return $row;
+}

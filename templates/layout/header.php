@@ -4,7 +4,7 @@ if(!defined('_KTHopLe'))
     die('Truy cập không hợp lệ');
 }
 
-
+//lấy thông tin người dùng đăng nhập
 
 ?>
 
@@ -29,7 +29,8 @@ if(!defined('_KTHopLe'))
                             </svg>
                         </a>
                     </div>
-                    <a href=""><span class="dashboard__cta--greeting">hi, Account!</span></a>
+                    <a href=""><span class="dashboard__cta--greeting">hi,
+                            <?php echo $user_detail['tenNguoiDung'];?>!</span></a>
                 </div>
             </div>
         </div>
