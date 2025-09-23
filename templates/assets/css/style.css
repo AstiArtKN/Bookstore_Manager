@@ -18,6 +18,13 @@ body {
 }
 
 /* ==== Common ==== */
+input,
+textarea,
+select,
+button {
+  font-size: inherit;
+  font-family: inherit;
+}
 a {
   text-decoration: none;
 }
@@ -26,8 +33,34 @@ a {
   margin: 0 auto;
   /* background-color: antiquewhite; */
 }
+.btn {
+  display: block;
+  min-width: 120px;
+  line-height: 40px;
+  font-size: 1.6rem;
+  background-color: var(--primary-color);
+  color: #fff;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+}
+.btn:hover {
+  opacity: 0.9;
+}
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: var(--line-clamp, 1);
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp.line2 {
+  --line-clamp: 2;
+}
+.break-all {
+  word-break: break-all;
+}
 
-/* === sidebar === */
+/* === ============     sidebar =============================== === */
 .sidebar {
   padding: 24px;
   width: 270px;
@@ -36,6 +69,8 @@ a {
   left: 0;
   /* background-color: aqua; */
   /* position: static; */
+  overflow-y: auto;
+  height: 100vh;
 }
 .sidebar__logo {
   display: flex;
@@ -43,6 +78,7 @@ a {
   align-items: center;
   padding: 24px;
 }
+
 .logo-svg-book {
   width: 4rem;
 }
@@ -96,6 +132,8 @@ a {
   color: #747475;
   font-size: 1.8rem;
 }
+
+/* submenu */
 
 /* ================== DASHBOARD =========================== */
 .dashboard {
@@ -324,7 +362,7 @@ td.dashboard-col-top-book {
 }
 .dashboard__bottom-right {
   background: #fff;
-  width: 40%;
+  width: 60%;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
@@ -338,4 +376,124 @@ td.dashboard-col-top-book {
 .barchart {
   background-color: var(--second-color);
   border-radius: 12px;
+}
+
+/* ===================                             ============================== */
+
+/* =================== B O O K E D I T O R P A G E ============================== */
+
+/* ===================                             ============================== */
+.book-editor {
+  background: #fff;
+  box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  overflow-y: auto;
+}
+.book-editor__header {
+  padding: 10px 20px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: solid 1px #c4c4c4;
+  margin-left: -20px;
+  margin-right: -20px;
+}
+
+.book-editor__tool {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.form-inside__container {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.dashboard__mid-title {
+  border-bottom: solid 1px var(--primary-color);
+  padding-bottom: 15px;
+}
+
+.show-entries {
+  margin-bottom: 12px;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.show-entries select {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1.4rem;
+}
+
+.btn-timsach {
+  border: transparent;
+  font-size: 1.4rem;
+  line-height: 32px;
+}
+.textarea-timsach {
+  color: var(--small-text-second);
+  font-size: 1.4rem;
+  border-radius: 12px;
+  line-height: 24px;
+  border: solid 1px var(--primary-color);
+}
+.textarea-timsach:focus {
+  border: solid 2px var(--primary-color);
+  outline: none;
+}
+
+.book-editor__table-wrapper {
+  margin-top: 30px;
+  width: 100%;
+  /* max-height: 500px; */
+  overflow-x: auto;
+  overflow-y: auto;
+}
+.book-editor__table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Cố định layout, tránh co dồn */
+  min-width: 600px;
+}
+.book-editor_table td,
+.book-editor_table th {
+  padding: 10px;
+  vertical-align: middle;
+}
+.book-editor_table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-editor_table td {
+  font-size: 1.4rem;
+  color: var(--small-text-second);
+}
+
+.book-editor_table td.tensach,
+.book-editor_table td.mota {
+  white-space: normal;
+  word-break: break-word;
+}
+.btn-warning,
+.btn-danger {
+  display: inline-block;
+  min-width: 40px;
+  line-height: 40px;
+  font-size: 1.4rem;
+  height: auto;
+}
+.btn-warning {
+  background: #dd6612;
+}
+.btn-danger {
+  background: #b72424;
 }

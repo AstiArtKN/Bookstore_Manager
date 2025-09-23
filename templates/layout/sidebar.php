@@ -25,13 +25,18 @@ $user_detail = getCurrentUserFromToken();
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet" />
+
     <!-- style css -->
-    <link rel="stylesheet" href="<?php echo _HOST_URL_TEMPLATES; ?>/assets/css/style.css" />
+    <link rel="stylesheet" href="<?php echo _HOST_URL_TEMPLATES; ?>/assets/css/style.css?ver=<?php rand(); ?>" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"> -->
 
-    <title>Quản Lý Bán Sách</title>
+    <title><?php echo $data['title'];?></title>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -61,7 +66,7 @@ $user_detail = getCurrentUserFromToken();
                             </svg>
                         </a>
                     </div>
-                    <a href="" class="nav__link">Trang Chủ</a>
+                    <a href="<?php echo _HOST_URL; ?>" class="nav__link">Trang Chủ</a>
                 </li>
                 <li class="nav__item">
                     <div class="nav__icon-left">
@@ -72,7 +77,7 @@ $user_detail = getCurrentUserFromToken();
                             </svg>
                         </a>
                     </div>
-                    <a href="" class="nav__link">Quản Lý Sách</a>
+                    <a href="?module=books&action=list" class="nav__link">Quản Lý Sách</a>
                 </li>
                 <li class="nav__item">
                     <div class="nav__icon-left">
@@ -139,7 +144,7 @@ $user_detail = getCurrentUserFromToken();
                             </svg>
                         </a>
                     </div>
-                    <a href="" class="nav__link">Quản Lý Khách Hàng</a>
+                    <a href="?module=users&action=list" class="nav__link">Danh Sách Người Dùng</a>
                 </li>
             </ul>
         </div>

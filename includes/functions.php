@@ -5,9 +5,9 @@ if(!defined('_KTHopLe'))
 }
 
 function layout($layOutName, $data = []){
-    if(file_exists(PATH_URL_TEMPLATES . '/layout' . $layOutName . '.php'))
+    if(file_exists(PATH_URL_TEMPLATES . '/layout/' . $layOutName . '.php'))
     {
-        require_once PATH_URL_TEMPLATES . '/layout' . $layOutName . '.php';
+        require_once PATH_URL_TEMPLATES . '/layout/' . $layOutName . '.php';
     }
 }
 

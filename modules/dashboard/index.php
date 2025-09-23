@@ -3,8 +3,15 @@ if(!defined('_KTHopLe'))
 {
     die('Truy cập không hợp lệ');
 }
-require_once './templates/layout/sidebar.php';
-require_once './templates/layout/header.php';
+// require_once './templates/layout/sidebar.php';
+// require_once './templates/layout/header.php';
+
+$data = [
+    'title' => 'Trang chủ'
+];
+
+layout('sidebar', $data);
+layout('header');
 ?>
 
 
@@ -258,6 +265,7 @@ require_once './templates/layout/header.php';
 
 <?php
 
-require_once './templates/layout/footer.php';
+// require_once './templates/layout/footer.php';
+layout('footer');
 
 ?>

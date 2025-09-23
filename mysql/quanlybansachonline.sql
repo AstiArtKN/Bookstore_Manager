@@ -182,14 +182,14 @@ create table TheLoaiSach
 	constraint PK_TheLoaiSach primary key(ID)
 )
 
-create table DongGopCuaTacGia
-(
-	ISBN varchar(100),
-	tacGiaId varchar(10),
-	vaiTro varchar(100) not null,
+-- create table DongGopCuaTacGia
+-- (
+-- 	ISBN varchar(100),
+-- 	tacGiaId varchar(10),
+-- 	vaiTro varchar(100) not null,
 
-	constraint PK_DongGopCuaTacGia primary key(ISBN,tacGiaId)
-)
+-- 	constraint PK_DongGopCuaTacGia primary key(ISBN,tacGiaId)
+-- )
 
  create table NhaXuatBan
  (
@@ -398,12 +398,12 @@ add constraint FK_HoaDonChiTiet_HoaDon foreign key (hoaDonId) references HoaDon 
 
 
 
-Insert into TrangThaiNguoiDung(ID, tenTrangThai, moTa)
-values
-	('TTND1', N'Chưa xác minh', N'Tài khoản đã đăng ký, nhưng chưa xác minh'),
-	('TTND2', N'Đã xác minh', N'Tài khoản đã đăng ký và đã xác minh'),
-	('TTND3', N'Đã bị khóa tạm thời', N'Tài khoản đã bị khóa do vi phạm chính sách'),
-	('TTND4', N'Đã bị khóa vĩnh viễn', N'Tài khoản đã bị khóa do vi phạm chính sách, khóa vĩnh viễn')
+-- Insert into TrangThaiNguoiDung(ID, tenTrangThai, moTa)
+-- values
+-- 	('TTND1', N'Chưa xác minh', N'Tài khoản đã đăng ký, nhưng chưa xác minh'),
+-- 	('TTND2', N'Đã xác minh', N'Tài khoản đã đăng ký và đã xác minh'),
+-- 	('TTND3', N'Đã bị khóa tạm thời', N'Tài khoản đã bị khóa do vi phạm chính sách'),
+-- 	('TTND4', N'Đã bị khóa vĩnh viễn', N'Tài khoản đã bị khóa do vi phạm chính sách, khóa vĩnh viễn')
 
 
 
@@ -421,26 +421,7 @@ Insert into NguoiDung
 		matKhauBoSung, ngaySinh, gioitinhId, trangThaiId, quyenHanId
 	)
 values 
-	(
-		'04e835c1-7d9f-4ed3-8b55-fd4bb66ef0d0', 'phanchanh', 'Phan', N'Xuân', N'Chánh', 'phanchanhabcabc@gmail.com', '0293013483', 'fd4bb66ef0d0',
-		'4ed3-8b55', '04/04/2001', 'GT1', 'TTND1', '394053f0d6372f568209482af3f0bd36'
-	),
-	(
-		'e2e6608c-4ce5-47a5-b6cb-4a2d00d7557d', 'caotri', N'Nguyễn Huỳnh', N'Cao', N'Trí', 'caotri2344232@gmail.com', '928248452', '4a2d00d7557d',
-		'47a5-b6cb', '06/06/2001','GT1', 'TTND1', '20d24420c8216584615ef62e1d931385'
-	),
-	(
-		'595b5e5b-0a34-47c1-a66a-34b8c5fb0559', 'nguyenkhiem', N'Nguyễn', N'Minh', N'Khiêm', 'nguyenkhiem239058@gmail.com', '03128243823', '34b8c5fb0559',
-		'47c1-a66a', '04/05/2001','GT1', 'TTND1', 'ee11cbb19052e40b07aac0ca060c23ee'
-	),
-	(
-		'16683d91-26db-4e87-965a-638b5f6ed0e9', 'nguyenhao', N'Nguyễn', '', N'Hào', 'nguyenhao34224@gmail.com', '0312843523', '638b5f6ed0e9',
-		'4e87-965a', '14/06/2001', 'GT1', 'TTND1', 'ee11cbb19052e40b07aac0ca060c23ee'
-	),
-	(
-		'152641f8-5d76-465a-adb2-45305d435576', 'phamvanbinh', N'Phạm', N'Văn', N'Bình', 'vanbinhnguyen543456@gmail.com', '03453676543', '45305d435576',
-		'465a-adb2', '09/05/2001', 'GT1', 'TTND1', 'ee11cbb19052e40b07aac0ca060c23ee'
-	)
+	
 
 
 
@@ -627,29 +608,29 @@ values
 	('978-604-2-16001-8', N'Dế Mèn Phiêu Lưu Ký', 'NNS1', '24 x 32 cm', 2019, 166, N'Bìa cứng', 300000, 0, 54, 'TL24','NXB10', N'', 'TTS1', 0)
 
 
-Insert into DongGopCuaTacGia(ISBN, tacGiaId, vaiTro)
-values
-	('978-604-2247-33-2', 'TG1', N'Tác giả'),
-	('978-604-9950-56-9', 'TG2', N'Tác giả'),
-	('978-604-306-114-7', 'TG7', N'Tác giả'),
-	('978-604-1-14219-0', 'TG3', N'Tác giả'),
-	('978-604-1-00475-7', 'TG4', N'Tác giả'),
-	('978-604-1-17140-4', 'TG4', N'Tác giả'),
-	('978-604-1-17093-3', 'TG4', N'Tác giả'),
-	('978-604-56-7740-7', 'TG8', N'Tác giả'),
-	('978-604-1-17981-1', 'TG13', N'Tác giả'),
-	('978-604-1-18901-2', 'TG5', N'Tác giả'),
-	('978-604-45-7750-6', 'TG3', N'Tác giả'),
-	('978-604-2117-56-2', 'TG15', N'Tác giả'),
-	('978-604-2-17811-1', 'TG15', N'Tác giả'),
-	('978-604-58-8094-4', 'TG6', N'Tác giả'),
-	('978-604-9829-78-9', 'TG9', N'Tác giả'),
-	('978-604-2-13221-4', 'TG13', N'Tác giả'),
-	('978-604-88-9577-8', 'TG10', N'Tác giả'),
-	('978-604-973-378-9', 'TG10', N'Tác giả'),
-	('978-604-1-00215-3', 'TG14', N'Tác giả'),
-	('978-604-2-16001-8', 'TG11', N'Tác giả'),
-	('978-604-2-16001-8', 'TG12', N'Tác giả')
+-- Insert into DongGopCuaTacGia(ISBN, tacGiaId, vaiTro)
+-- values
+-- 	('978-604-2247-33-2', 'TG1', N'Tác giả'),
+-- 	('978-604-9950-56-9', 'TG2', N'Tác giả'),
+-- 	('978-604-306-114-7', 'TG7', N'Tác giả'),
+-- 	('978-604-1-14219-0', 'TG3', N'Tác giả'),
+-- 	('978-604-1-00475-7', 'TG4', N'Tác giả'),
+-- 	('978-604-1-17140-4', 'TG4', N'Tác giả'),
+-- 	('978-604-1-17093-3', 'TG4', N'Tác giả'),
+-- 	('978-604-56-7740-7', 'TG8', N'Tác giả'),
+-- 	('978-604-1-17981-1', 'TG13', N'Tác giả'),
+-- 	('978-604-1-18901-2', 'TG5', N'Tác giả'),
+-- 	('978-604-45-7750-6', 'TG3', N'Tác giả'),
+-- 	('978-604-2117-56-2', 'TG15', N'Tác giả'),
+-- 	('978-604-2-17811-1', 'TG15', N'Tác giả'),
+-- 	('978-604-58-8094-4', 'TG6', N'Tác giả'),
+-- 	('978-604-9829-78-9', 'TG9', N'Tác giả'),
+-- 	('978-604-2-13221-4', 'TG13', N'Tác giả'),
+-- 	('978-604-88-9577-8', 'TG10', N'Tác giả'),
+-- 	('978-604-973-378-9', 'TG10', N'Tác giả'),
+-- 	('978-604-1-00215-3', 'TG14', N'Tác giả'),
+-- 	('978-604-2-16001-8', 'TG11', N'Tác giả'),
+-- 	('978-604-2-16001-8', 'TG12', N'Tác giả')
 
 
 Insert into NhapHang(ISBN, nhaCungCapId, lanNhap, soLuong, gia, ngayNhapHang)

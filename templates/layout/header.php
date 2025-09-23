@@ -5,7 +5,7 @@ if(!defined('_KTHopLe'))
 }
 
 //lấy thông tin người dùng đăng nhập
-
+$user_detail = getCurrentUserFromToken();
 ?>
 
 <main class="dashboard">
@@ -13,7 +13,7 @@ if(!defined('_KTHopLe'))
         <!-- header -->
         <div class="dashboard__header">
             <div class="breadcrumb">
-                <span>Page</span> / <span>Dashboard</span>
+                <span>Page</span> / <span><?php echo $data['title'];?></span>
             </div>
             <div class="dashboard__header-right">
                 <div class="notifi">
