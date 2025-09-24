@@ -11,7 +11,7 @@ $data = [
 ];
 
 layout('sidebar', $data);
-layout('header');
+layout('header', $data);
 ?>
 
 

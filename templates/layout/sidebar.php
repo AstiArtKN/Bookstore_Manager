@@ -28,6 +28,7 @@ $user_detail = getCurrentUserFromToken();
 
     <!-- style css -->
     <link rel="stylesheet" href="<?php echo _HOST_URL_TEMPLATES; ?>/assets/css/style.css?ver=<?php rand(); ?>" />
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

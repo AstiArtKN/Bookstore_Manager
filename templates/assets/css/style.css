@@ -402,6 +402,8 @@ td.dashboard-col-top-book {
 
 .book-editor__tool {
   margin-top: 30px;
+}
+.book-editor__tool-form {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -459,8 +461,8 @@ td.dashboard-col-top-book {
 .book-editor__table-wrapper table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed; /* Cố định layout, tránh co dồn */
-  min-width: 600px;
+  /* table-layout: fixed;  */
+  min-width: 700px;
 }
 .book-editor_table td,
 .book-editor_table th {
@@ -483,7 +485,11 @@ td.dashboard-col-top-book {
   white-space: normal;
   word-break: break-word;
 }
+/* .book-editor_table td.email {
+  min-width: 250px !important;
+} */
 .btn-warning,
+.btn-setting,
 .btn-danger {
   display: inline-block;
   min-width: 40px;
@@ -496,4 +502,7 @@ td.dashboard-col-top-book {
 }
 .btn-danger {
   background: #b72424;
+}
+.btn-setting {
+  background: #5600b8;
 }
