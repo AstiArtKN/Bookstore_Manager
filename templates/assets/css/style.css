@@ -506,3 +506,46 @@ td.dashboard-col-top-book {
 .btn-setting {
   background: #5600b8;
 }
+
+/* ================== page list ======================== */
+.navpage {
+  margin-top: 20px;
+}
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.page-item {
+  margin-right: 5px;
+}
+
+.page-item:last-child {
+  border-right: none;
+}
+
+.page-link {
+  display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: var(--primary-color);
+  background: white;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  transition: background 0.3s, color 0.3s;
+}
+
+.page-link:hover {
+  background: #f1f1f1;
+}
+
+.page-link.active {
+  background: var(--primary-color);
+  color: #fff;
+  font-weight: bold;
+}

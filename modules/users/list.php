@@ -11,7 +11,13 @@ $data = [
 layout('sidebar', $data);
 layout('header',  $data);
 
-//?module=users&action=list&slt_quyenhan=&search__user=
+//?module=users&action=list&slt_quyenhan=&search__user=&page=1
+//phân trang trước ... 3,4,5,...sau
+//1,2,3...sau -> trước 1, [2], 3,...sau
+//perpage, maxpage, (offset)vị trí lấy dữu liệu và đỗ dữ liệu từ đâu
+
+
+
 $filter = filterData();
 $chuoiWhere = '';
 $slt_quyenhan = 'KH';
@@ -47,6 +53,27 @@ if(isGet()){
     }
 }
 
+
+//xử lý trang
+$maxData = getRows("SELECT ID FROM nguoidung");
+$perPage = 3;//so dong du lieu
+$maxPage = ceil($maxData/$perPage);
+$offset = 0;
+$page = 1;
+//getpage
+if(isset($filter['page'])){
+    $page = $filter['page'];
+}
+
+if($page > $maxPage || $page < 1){
+    $page = 1;
+}
+
+if(isset($page)){
+    $offset = ($page - 1) * $perPage;
+}
+
+
 // echo $chuoiWhere;
 
 $getDetailUser = getAll("SELECT nguoidung.ID, nguoidung.tenNguoiDung, nguoidung.ho, nguoidung.tenLot,
@@ -55,6 +82,7 @@ nguoidung.trangThai, quyenhan.tenQuyenHan
 FROM nguoidung
 INNER JOIN `quyenhan` ON nguoidung.quyenHanId = quyenhan.ID
 $chuoiWhere
+LIMIT $offset, $perPage
 ");
 
 $GetQuyenHan = getAll("SELECT * FROM quyenhan");
@@ -163,7 +191,65 @@ $GetQuyenHan = getAll("SELECT * FROM quyenhan");
                 <?php endforeach;?>
             </tbody>
         </table>
+
     </div>
+    <nav aria-label="Page navigation example" class="navpage">
+        <ul class="pagination">
+            <!-- xử lý nứt 'trước' -->
+            <?php 
+                if($page > 1):
+             ?>
+            <li class="page-item"><a class="page-link"
+                    href="?module=users&action=list&page=<?php echo $page-1;?>">Trước</a>
+            </li>
+            <?php endif; ?>
+            <!-- dấu ... trước -->
+            <!-- tính vị trí bắt đầu -->
+            <?php $start = $page - 1;
+                if($start < 1){
+                    $start = 1;
+                }
+             ?>
+            <?php 
+                if($start > 1):
+             ?>
+            <li class="page-item"><a class="page-link"
+                    href="?module=users&action=list&page=<?php echo $page-1;?>">...</a>
+            </li>
+            <?php endif; 
+                $end = $page + 1;
+                if($end > $maxPage){
+                    $end = $maxPage;
+                }
+            ?>
+
+            <!-- xử lý số trang -->
+            <?php for($i = $start ; $i <= $end; $i++): ?>
+            <li class="page-item"><a class="page-link <?php echo ($page == $i)? 'active' : false; ?>"
+                    href="?module=users&action=list&page=<?php echo $i;?>"><?php echo $i; ?></a></li>
+
+            <!-- dấu ... sau -->
+            <!-- tính vị trí bắt đầu -->
+
+            <?php 
+                endfor;
+                if($end < $maxPage):
+             ?>
+            <li class=" page-item"><a class="page-link"
+                    href="?module=users&action=list&page=<?php echo $page+1;?>">...</a>
+            </li>
+            <?php endif; ?>
+
+            <!-- xử lý nứt 'sau' -->
+            <?php 
+                if($page < $maxPage):
+             ?>
+            <li class="page-item"><a class="page-link"
+                    href="?module=users&action=list&page=<?php echo $page+1;?>">Sau</a>
+            </li>
+            <?php endif; ?>
+        </ul>
+    </nav>
 </div>
 </div>
 
