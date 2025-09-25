@@ -38,7 +38,7 @@ if(isGet()){
             $chuoiWhere .= ' AND ';
         }
 
-        $chuoiWhere .= " tenNguoiDung LIKE '%$search__user%' OR email LIKE '%$search__user%' ";
+        $chuoiWhere .= " (nguoidung.tenNguoiDung LIKE '%$search__user%' OR nguoidung.email LIKE '%$search__user%') ";
     }
 
     if(!empty($slt_quyenhan)){
@@ -49,7 +49,7 @@ if(isGet()){
             $chuoiWhere .= ' AND ';
         }
 
-         $chuoiWhere .= " quyenhan.ID = '$slt_quyenhan' ";
+         $chuoiWhere .= " nguoidung.quyenHanId = '$slt_quyenhan' ";
     }
 }
 
@@ -85,9 +85,23 @@ $chuoiWhere
 LIMIT $offset, $perPage
 ");
 
+// option html
 $GetQuyenHan = getAll("SELECT * FROM quyenhan");
+//xử lý query
+// $_SERVER['QUERY_STRING']; -> module=users&action=list&search__user=max&page=2
+if(!empty($_SERVER['QUERY_STRING'])){
+    $queryString = $_SERVER['QUERY_STRING'];
+    $queryString = str_replace('&page='.$page,'',$queryString);
+}
 
 // print_r($getDetailUser);
+
+if(!empty($slt_quyenhan) || !empty($search__user)){
+    $maxData2 = getRows("SELECT ID FROM nguoidung 
+     $chuoiWhere");
+    $maxPage = ceil($maxData2/$perPage);
+}
+
 
 ?>
 
@@ -95,7 +109,7 @@ $GetQuyenHan = getAll("SELECT * FROM quyenhan");
 <div class="book-editor">
     <div class="book-editor__header">
         <h2 class="dashboard__mid-title">Danh Sách Người Dùng</h2>
-        <a href="?module=books&action=add" class="book-editor__add btn"><i class="fa-solid fa-plus"></i> Thêm Người
+        <a href="?module=users&action=add" class="book-editor__add btn"><i class="fa-solid fa-plus"></i> Thêm Người
             Dùng</a>
     </div>
     <div class="book-editor__tool">
@@ -200,7 +214,7 @@ $GetQuyenHan = getAll("SELECT * FROM quyenhan");
                 if($page > 1):
              ?>
             <li class="page-item"><a class="page-link"
-                    href="?module=users&action=list&page=<?php echo $page-1;?>">Trước</a>
+                    href="?<?php echo $queryString;?>&page=<?php echo $page-1;?>">Trước</a>
             </li>
             <?php endif; ?>
             <!-- dấu ... trước -->
@@ -214,7 +228,7 @@ $GetQuyenHan = getAll("SELECT * FROM quyenhan");
                 if($start > 1):
              ?>
             <li class="page-item"><a class="page-link"
-                    href="?module=users&action=list&page=<?php echo $page-1;?>">...</a>
+                    href="?<?php echo $queryString;?>&page=<?php echo $page-1;?>">...</a>
             </li>
             <?php endif; 
                 $end = $page + 1;
@@ -226,7 +240,7 @@ $GetQuyenHan = getAll("SELECT * FROM quyenhan");
             <!-- xử lý số trang -->
             <?php for($i = $start ; $i <= $end; $i++): ?>
             <li class="page-item"><a class="page-link <?php echo ($page == $i)? 'active' : false; ?>"
-                    href="?module=users&action=list&page=<?php echo $i;?>"><?php echo $i; ?></a></li>
+                    href="?<?php echo $queryString;?>&page=<?php echo $i;?>"><?php echo $i; ?></a></li>
 
             <!-- dấu ... sau -->
             <!-- tính vị trí bắt đầu -->
@@ -236,7 +250,7 @@ $GetQuyenHan = getAll("SELECT * FROM quyenhan");
                 if($end < $maxPage):
              ?>
             <li class=" page-item"><a class="page-link"
-                    href="?module=users&action=list&page=<?php echo $page+1;?>">...</a>
+                    href="?<?php echo $queryString;?>&page=<?php echo $page+1;?>">...</a>
             </li>
             <?php endif; ?>
 
@@ -245,7 +259,7 @@ $GetQuyenHan = getAll("SELECT * FROM quyenhan");
                 if($page < $maxPage):
              ?>
             <li class="page-item"><a class="page-link"
-                    href="?module=users&action=list&page=<?php echo $page+1;?>">Sau</a>
+                    href="?<?php echo $queryString;?>&page=<?php echo $page+1;?>">Sau</a>
             </li>
             <?php endif; ?>
         </ul>

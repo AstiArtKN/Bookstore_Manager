@@ -38,7 +38,7 @@ function sendMail($emailTo, $subject, $content)
         $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
         $mail->Username   = 'khiemnguyen1350@gmail.com';                     //SMTP username
-        $mail->Password   = '';                               //SMTP password
+        $mail->Password   = 'wmafdpobbaegfhul';                               //SMTP password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
         $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
@@ -299,7 +299,9 @@ function getCurrentUserFromToken() {
     nguoidung.tenLot,
     nguoidung.ten,
     nguoidung.email,
-    nguoidung.SDT FROM token_login
+    nguoidung.SDT,
+    nguoidung.quyenHanId
+    FROM token_login
     INNER JOIN nguoidung ON nguoidung.ID = token_login.nguoidung_id
      WHERE token = '$token'");
      

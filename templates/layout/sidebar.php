@@ -136,6 +136,7 @@ $user_detail = getCurrentUserFromToken();
                     </div>
                     <a href="" class="nav__link">Thống kê - Báo Cáo</a>
                 </li>
+                <?php if($user_detail['quyenHanId'] === 'QTV'): ?>
                 <li class="nav__item">
                     <div class="nav__icon-left">
                         <a href="">
@@ -147,6 +148,7 @@ $user_detail = getCurrentUserFromToken();
                     </div>
                     <a href="?module=users&action=list" class="nav__link">Danh Sách Người Dùng</a>
                 </li>
+                <?php endif;?>
             </ul>
         </div>
         <!-- Account -->
