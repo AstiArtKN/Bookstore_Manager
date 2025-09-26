@@ -22,10 +22,6 @@ layout('header',  $data);
             <form action="" method="POST">
 
                 <div class="name-area">
-                    <div class="form-group">
-                        <label for="id">ID</label>
-                        <input type="text" id="id" name="id" required>
-                    </div>
 
                     <div class="form-group">
                         <label for="tenNguoiDung">Tên Người Dùng</label>
@@ -92,8 +88,12 @@ layout('header',  $data);
                     <div class="form-group">
                         <label for="quyenHanId">Quyền Hạn</label>
                         <select id="quyenHanId" name="quyenHanId">
-                            <option value="1">Quản trị viên</option>
+                            <?php $getQH = getAll("SELECT * FROM quyenhan");
+                                foreach($getQH as $item):
+                            ?>
 
+                            <option value="<?php echo $item['ID']?>"><?php echo $item['tenQuyenHan']; ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                 </div>
