@@ -609,3 +609,30 @@ button:hover {
   outline: none;
   border: solid 3px var(--primary-color);
 }
+
+.erro {
+  color: #ff0a0a;
+  margin-top: 10px;
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* =================== style thong bao =============================== */
+.alert-success {
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--primary-color);
+  border: solid 1px #bd4c01;
+  color: #fff;
+  font-size: 1.8rem;
+  opacity: 0.8;
+}
+.alert-danger {
+  padding: 10px;
+  border-radius: 8px;
+  background: #ff6060;
+  border: solid 1px #900000;
+  color: #fff;
+  font-size: 1.8rem;
+  opacity: 0.8;
+}
