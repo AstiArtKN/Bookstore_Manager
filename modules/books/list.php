@@ -20,7 +20,7 @@ layout('header',  $data);
 
 $filter = filterData();
 $chuoiWhere = '';
-$slt_quyenhan = 'KH';
+$slt_quyenhan = 'TL26';
 $search__user = '';
 
 if(isGet()){
@@ -117,7 +117,7 @@ $msg_type = getSessionFlash('msg_type');
             }
                                 
         ?>
-        <a href="?module=users&action=add" class="book-editor__add btn"><i class="fa-solid fa-plus"></i> Thêm Sách</a>
+        <a href="?module=books&action=add" class="book-editor__add btn"><i class="fa-solid fa-plus"></i> Thêm Sách</a>
     </div>
     <div class="book-editor__tool">
         <form method="GET" action="">

@@ -102,7 +102,7 @@ $user_detail = getCurrentUserFromToken();
                     </div>
                     <a href="" class="nav__link">Thể Loại</a>
                 </li>
-                <li class="nav__item">
+                <!-- <li class="nav__item">
                     <div class="nav__icon-left">
                         <a href="">
                             <svg class="nav__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -112,7 +112,7 @@ $user_detail = getCurrentUserFromToken();
                         </a>
                     </div>
                     <a href="" class="nav__link">NXB</a>
-                </li>
+                </li> -->
 
                 <li class="nav__item">
                     <div class="nav__icon-left">
