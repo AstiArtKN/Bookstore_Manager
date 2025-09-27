@@ -135,6 +135,7 @@ create table Sach
 	giamGia float not null,
 	soLuong bigint not null,
 	theLoaiId varchar(10) not null,
+	tacGiaId varchar(10) not null,
 	nhaXuatBanId varchar(10) not null,
 	moTa text,
 	hinhAnh varchar(200),
@@ -363,6 +364,11 @@ alter table DongGopCuaTacGia
 add constraint FK_DongGopCuaTacGia_Sach foreign key (ISBN) references Sach (ISBN)
 
  -- +/ Các ràng buộc liên quan tới sách
+
+ ALTER TABLE sach
+ADD CONSTRAINT fk_sach_tg_id
+FOREIGN KEY (tacGiaId) REFERENCES tacgiasach(ID);
+
 
 -- + Các ràng buộc liên quan tới nhà cung cấp, nhập hàng
 

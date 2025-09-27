@@ -305,7 +305,7 @@ td.dashboard-col-top-book {
   /* padding-right: 20px; */
 }
 .table-rank-img-mid {
-  width: 48px;
+  width: 180px;
   height: auto;
   object-fit: cover;
 }
@@ -437,13 +437,13 @@ td.dashboard-col-top-book {
 .btn-timsach {
   border: transparent;
   font-size: 1.4rem;
-  line-height: 32px;
+  line-height: 18px;
 }
 .textarea-timsach {
   color: var(--small-text-second);
   font-size: 1.4rem;
   border-radius: 12px;
-  line-height: 24px;
+  line-height: 18px;
   border: solid 1px var(--primary-color);
 }
 .textarea-timsach:focus {
@@ -461,7 +461,7 @@ td.dashboard-col-top-book {
 .book-editor__table-wrapper table {
   width: 100%;
   border-collapse: collapse;
-  /* table-layout: fixed;  */
+  /* table-layout: fixed; */
   min-width: 700px;
 }
 .book-editor_table td,
@@ -485,8 +485,8 @@ td.dashboard-col-top-book {
   white-space: normal;
   word-break: break-word;
 }
-/* .book-editor_table td.email {
-  min-width: 250px !important;
+/* .book-editor_table td {
+  min-width: 150px !important;
 } */
 .btn-warning,
 .btn-setting,
