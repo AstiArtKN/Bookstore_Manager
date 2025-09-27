@@ -101,7 +101,8 @@ if(!empty($slt_quyenhan) || !empty($search__user)){
      $chuoiWhere");
     $maxPage = ceil($maxData2/$perPage);
 }
-
+$msg = getSessionFlash('msg');
+$msg_type = getSessionFlash('msg_type');
 
 ?>
 
@@ -109,6 +110,12 @@ if(!empty($slt_quyenhan) || !empty($search__user)){
 <div class="book-editor">
     <div class="book-editor__header">
         <h2 class="dashboard__mid-title">Danh Sách Người Dùng</h2>
+        <?php 
+            if(!empty($msg) && !empty($msg_type)){
+                getMsg($msg, $msg_type); 
+            }
+                                
+        ?>
         <a href="?module=users&action=add" class="book-editor__add btn"><i class="fa-solid fa-plus"></i> Thêm Người
             Dùng</a>
     </div>
@@ -191,7 +198,7 @@ if(!empty($slt_quyenhan) || !empty($search__user)){
                             <i class="fa-solid fa-gears"></i>
                         </a></td>
                     <td>
-                        <a href="#" class="btn btn-warning">
+                        <a href="?module=users&action=edit&id=<?php echo $item['ID'];?>" class="btn btn-warning">
                             <i class="fa-solid fa-pencil"></i>
                         </a>
                     </td>
