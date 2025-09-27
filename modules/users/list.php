@@ -203,7 +203,8 @@ $msg_type = getSessionFlash('msg_type');
                         </a>
                     </td>
                     <td>
-                        <a href="#" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xoá không?')">
+                        <a href="?module=users&action=delete&id=<?php echo $item['ID'];?>" class="btn btn-danger"
+                            onclick="return confirm('Bạn có chắc chắn muốn xoá không?')">
                             <i class="fa-solid fa-trash"></i>
                         </a>
                     </td>
