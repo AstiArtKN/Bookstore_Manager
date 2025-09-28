@@ -128,7 +128,7 @@ create table Sach
 	tenSach varchar(100) not null,
 	ngonNguId varchar(10) not null,
 	kichThuoc varchar(50),
-	ngayXuatBan varchar(50),
+	ngayXuatBan datetime null,
 	soTrang int,
 	dinhDang varchar(100),
 	gia float not null,

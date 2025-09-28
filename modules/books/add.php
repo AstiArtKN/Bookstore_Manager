@@ -14,102 +14,91 @@ if(isPost()){
     $filter = filterData();
     $errors = [];
     //validate firsNname
-    if(empty(trim($filter['firstName']))){
-        $errors['firstName']['require'] = 'Vui lòng nhập họ của bạn';
+    if(empty(trim($filter['tenSach']))){
+        $errors['tenSach']['require'] = 'Vui lòng nhập tên sách';
     }
     // }else{
         
     // }
     //validate middleName
-    if(empty(trim($filter['middleName']))){
-        $errors['middleName']['require'] = 'Vui lòng nhập tên đệm của bạn';
+    if(empty(trim($filter['kichThuoc']))){
+        $errors['kichThuoc']['require'] = 'Vui lòng nhập kích thước';
     }
     // }else{
         
     // }
     //validate lastName
-    if(empty(trim($filter['lastName']))){
-        $errors['lastName']['require'] = 'Vui lòng nhập tên của bạn';
+    if(empty(trim($filter['soTrang']))){
+        $errors['soTrang']['require'] = 'Vui lòng nhập số trang';
+    }
+    // }else{
+        
+    // }
+    if(empty(trim($filter['soLuong']))){
+        $errors['soLuong']['require'] = 'Vui lòng nhập số lượng';
+    }
+    // }else{
+        
+    // }
+    if(empty(trim($filter['gia']))){
+        $errors['gia']['require'] = 'Vui lòng nhập số tiền';
     }
     // }else{
         
     // }
 
-
-    //validate email
-    if(empty(trim($filter['emailAddress']))){
-        $errors['emailAddress']['require'] = 'Vui lòng nhập email của bạn';
+    //validate ISBN
+    
+    if(empty(trim($filter['ISBN']))){
+            $errors['ISBN']['require'] = 'Vui lòng nhập mã ISBN';
     }
-    else{
-        // kiểm tra email đúng đinh dạng
-        if(!validateEmail(trim($filter['emailAddress']))){
-             $errors['emailAddress']['isEmail'] = 'Email không đúng định dạng';
-        }
-        else{// kiểm tra email có tồn tại không
-            $email = $filter['emailAddress'];
-
-            $checkEmail = getRows("SELECT * FROM nguoidung WHERE email = '$email' ");
-            if($checkEmail > 0){//email đã tồn tại
-                 $errors['emailAddress']['check'] = 'Email đã tồn tại';
-            }
-        }
+    $maISBN = $filter['ISBN'];
+    $checISBN = getRows("SELECT * FROM sach WHERE ISBN = '$maISBN' ");
+    if( $checISBN > 0){//đã tồn tại
+        $errors['ISBN']['check'] = 'Mã sách đã tồn tại';
     }
 
-    //validate email phoneNumber
-     if(empty($filter['phoneNumber'])){
-        $errors['phoneNumber']['require'] = 'vui lòng nhập số điện thoại của bạn';
-    }
-    else{
-        if(!isPhone($filter['phoneNumber'])){
-            $errors['phoneNumber']['isPhone'] = 'số điện thoại không đúng định dạng';
-        }
-    }
 
-     //validate namelogin
-    if(empty(trim($filter['namelogin']))){
-        $errors['namelogin']['require'] = 'Vui lòng nhập tên tài khoản';
-    }
-    else{
-        // kiểm tra tên tài khoản đúng đinh dạng
-        if(strlen(trim($filter['namelogin'])) < 2){
-             $errors['namelogin']['Length'] = 'Tên tài khoản phải từ 2 ký tự trở lên';
-        }
-        else{// kiểm tra tên tài khoản có tồn tại không
-            $namelogin = $filter['namelogin'];
-
-            $checkEmail = getRows("SELECT * FROM nguoidung WHERE tenNguoiDung = '$namelogin' ");
-            if($checkEmail > 0){//email đã tồn tại
-                 $errors['namelogin']['check'] = 'tài khoản đã tồn tại';
-            }
-        }
-    }
 
     if(empty($errors)){
-         $idrand = generateRandomID(10);
         // print_r($filter);
-        $data = [
-            'ID' => $idrand,
-            'tenNguoiDung' => $filter['namelogin'],
-            'ho' => $filter['firstName'],
-            'tenLot' => $filter['middleName'],
-            'ten' => $filter['lastName'],
-            'email' => $filter['emailAddress'],
-            'SDT' => $filter['phoneNumber'],
-            'matKhau' => password_hash( $filter['pass'], PASSWORD_DEFAULT),
-            'ngaySinh' => $filter['ngaySinh'],
-            'gioiTinh' => $filter['gioiTinh'],
-            'trangThai' => $filter['trangThai'],
-            'quyenHanId' => $filter['quyenHanId'],
-            'create_at' => date('Y:m:d H:i:s')
-            
+        $uploadDir = './templates/uploads/';
+        if(!file_exists($uploadDir)){
+            mkdir($uploadDir, 0777, true);
+        }
 
+        $fileName = basename($_FILES['hinhAnh']['name']);
+
+        $targetFile = $uploadDir . time() . '-' . $fileName;
+
+        $checkmove = move_uploaded_file($_FILES['hinhAnh']['tmp_name'], $targetFile);
+        $thumnail = '';
+        if($checkmove){
+            $thumnail = $targetFile;
+        }
+
+
+        $dataInsert = [
+            'ISBN' => $filter['ISBN'],
+            'tenSach' => $filter['tenSach'],
+            'kichThuoc' => $filter['kichThuoc'],
+            'soTrang' => $filter['soTrang'],
+            'soLuong' => $filter['soLuong'],
+            'gia' => $filter['gia'],
+            'ngayXuatBan' => $filter['ngayXuatBan'],
+            'tacGiaId' => $filter['tacGiaId'],
+            'theLoaiId' => $filter['theLoaiId'],
+            'nhaXuatBanId' => $filter['nhaXuatBanId'],
+            'hinhAnh' => $thumnail,
+            'moTa' => $filter['moTa'],
+            'create_at' => date('Y:m:d H:i:s')
         ];
-        $insertStatus = insert('nguoidung', $data);
+        $insertStatus = insert('sach', $dataInsert);
         if($insertStatus){
-            setSessionFlash('msg', 'thêm người dùng thành công!!!');
+            setSessionFlash('msg', 'thêm sách thành công!!!');
             setSessionFlash('msg_type', 'success');
         }else{
-             setSessionFlash('msg', 'Thêm người dùng thất bại.');
+             setSessionFlash('msg', 'Thêm sách thất bại.');
              setSessionFlash('msg_type', 'danger');
         }
         
@@ -143,66 +132,66 @@ $errorArr = getSessionFlash('errors');
     </div>
     <div class="user-add-wrapper">
         <div class="form-container">
-            <form action="" method="POST">
+            <form action="" method="POST" enctype="multipart/form-data">
 
                 <div class="name-area">
 
                     <div class="form-group">
-                        <label for="namelogin">ISBN</label>
-                        <input type="text" id="namelogin" name="namelogin" value="<?php 
+                        <label for="ISBN">ISBN</label>
+                        <input type="text" id="ISBN" name="ISBN" value="<?php 
                                                     if(!empty($oldData)){
-                                                        echo oldData($oldData, 'namelogin');
+                                                        echo oldData($oldData, 'ISBN');
                                                     }
                                                     
                                                 ?>">
                         <?php 
                             if(!empty($errorArr)){
-                                echo formError($errorArr, 'namelogin');
+                                echo formError($errorArr, 'ISBN');
                             }
                         ?>
                     </div>
 
                     <div class="form-group">
-                        <label for="firstName">Tên sách</label>
-                        <input type="text" id="firstName" name="firstName" value="<?php 
+                        <label for="tenSach">Tên sách</label>
+                        <input type="text" id="tenSach" name="tenSach" value="<?php 
                                                     if(!empty($oldData)){
-                                                        echo oldData($oldData, 'firstName');
+                                                        echo oldData($oldData, 'tenSach');
                                                     }
                                                     
                                                 ?>">
                         <?php 
                             if(!empty($errorArr)){
-                                echo formError($errorArr, 'firstName');
+                                echo formError($errorArr, 'tenSach');
                             }
                         ?>
                     </div>
 
                     <div class="form-group">
-                        <label for="middleName">kích thước</label>
-                        <input type="text" id="middleName" name="middleName" value="<?php 
+                        <label for="kichThuoc">kích thước</label>
+                        <input type="text" id="kichThuoc" name="kichThuoc" value="<?php 
                                                     if(!empty($oldData)){
-                                                        echo oldData($oldData, 'middleName');
+                                                        echo oldData($oldData, 'kichThuoc');
                                                     }
                                                     
                                                 ?>">
                         <?php 
                             if(!empty($errorArr)){
-                                echo formError($errorArr, 'middleName');
+                                echo formError($errorArr, 'kichThuoc');
                             }
                         ?>
                     </div>
 
                     <div class="form-group">
-                        <label for="lastName">Số trang</label>
-                        <input type="text" id="lastName" name="lastName" value="<?php 
+                        <label for="soTrang">Số trang</label>
+                        <input type="number" id="soTrang" name="soTrang" value="<?php 
                                                     if(!empty($oldData)){
-                                                        echo oldData($oldData, 'lastName');
+                                                        echo oldData($oldData, 'soTrang');
                                                     }
                                                     
                                                 ?>">
                         <?php 
                             if(!empty($errorArr)){
-                                echo formError($errorArr, 'lastName');
+                                echo formError($errorArr, 'soTrang');
                             }
                         ?>
                     </div>
@@ -210,31 +199,31 @@ $errorArr = getSessionFlash('errors');
 
                 <div class="contact-area">
                     <div class="form-group">
-                        <label for="emailAddress">Email</label>
-                        <input type="email" id="emailAddress" name="emailAddress" value="<?php 
+                        <label for="soLuong">Số lượng</label>
+                        <input type="number" id="soLuong" name="soLuong" value="<?php 
                                                     if(!empty($oldData)){
-                                                        echo oldData($oldData, 'emailAddress');
+                                                        echo oldData($oldData, 'soLuong');
                                                     }
                                                     
                                                 ?>">
                         <?php 
                             if(!empty($errorArr)){
-                                echo formError($errorArr, 'emailAddress');
+                                echo formError($errorArr, 'soLuong');
                             }
                         ?>
                     </div>
 
                     <div class="form-group">
-                        <label for="phoneNumber">Số Điện Thoại</label>
-                        <input type="text" id="phoneNumber" name="phoneNumber" value="<?php 
+                        <label for="gia">Giá tiền</label>
+                        <input type="number" id="gia" name="gia" value="<?php 
                                                     if(!empty($oldData)){
-                                                        echo oldData($oldData, 'phoneNumber');
+                                                        echo oldData($oldData, 'gia');
                                                     }
                                                     
                                                 ?>">
                         <?php 
                             if(!empty($errorArr)){
-                                echo formError($errorArr, 'phoneNumber');
+                                echo formError($errorArr, 'gia');
                             }
                         ?>
                     </div>
@@ -242,47 +231,57 @@ $errorArr = getSessionFlash('errors');
 
                 <div class="privite-area">
                     <div class="form-group">
-                        <label for="pass">Mật Khẩu</label>
-                        <input type="password" id="pass" name="pass">
+                        <label for="ngayXuatBan">Ngày xuất bản</label>
+                        <input type="date" id="ngayXuatBan" name="ngayXuatBan">
                     </div>
-
                     <div class="form-group">
-                        <label for="ngaySinh">Ngày Sinh</label>
-                        <input type="date" id="ngaySinh" name="ngaySinh">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="gioiTinh">Giới Tính</label>
-                        <select id="gioiTinh" name="gioiTinh">
-                            <option value="">-- Chọn --</option>
-                            <option value="Nam">Nam</option>
-                            <option value="Nữ">Nữ</option>
-                            <option value="Khác">Khác</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="trangThai">Trạng Thái</label>
-                        <select id="trangThai" name="trangThai">
-                            <option value="1">Hoạt động</option>
-                            <option value="0">Không hoạt động</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="quyenHanId">Quyền Hạn</label>
-                        <select id="quyenHanId" name="quyenHanId">
-                            <?php $getQH = getAll("SELECT * FROM quyenhan");
+                        <label for="tacGiaId">Tác giả</label>
+                        <select id="tacGiaId" name="tacGiaId">
+                            <?php $getQH = getAll("SELECT * FROM tacgiasach");
                                 foreach($getQH as $item):
                             ?>
 
-                            <option value="<?php echo $item['ID']?>"><?php echo $item['tenQuyenHan']; ?></option>
+                            <option value="<?php echo $item['ID']?>"><?php echo $item['tenTacGia']; ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
+
+                    <div class="form-group">
+                        <label for="theLoaiId">Thể loại</label>
+                        <select id="theLoaiId" name="theLoaiId">
+                            <?php $getQH = getAll("SELECT * FROM theloaisach");
+                                foreach($getQH as $item):
+                            ?>
+
+                            <option value="<?php echo $item['ID']?>"><?php echo $item['tenTheLoai']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="nhaXuatBanId">Nhà xuất bản</label>
+                        <select id="nhaXuatBanId" name="nhaXuatBanId">
+                            <?php $getQH = getAll("SELECT * FROM nhaxuatban");
+                                foreach($getQH as $item):
+                            ?>
+
+                            <option value="<?php echo $item['ID']?>"><?php echo $item['tenNhaXuatBan']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="hinhAnh">Hình ảnh</label>
+                        <input type="file" id="hinhAnh" name="hinhAnh">
+                    </div>
+                    <div class="form-group">
+                        <img class="img-add-book" style="display: none;" src="" alt="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="moTa">Mô tả sách</label>
+                    <textarea id="moTa" name="moTa" rows="5" cols="50" placeholder="Nhập mô tả sách..."></textarea>
                 </div>
 
-                <button type="submit">Thêm Người Dùng</button>
+                <button type="submit">Thêm sách</button>
             </form>
         </div>
     </div>

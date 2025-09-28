@@ -598,14 +598,16 @@ button:hover {
   row-gap: 20px;
 }
 .form-group input,
-.form-group select {
+.form-group select,
+.form-group textarea {
   color: var(--small-text-second);
   font-size: 1.6rem;
   border-radius: 8px;
   border: solid 1px var(--primary-color);
 }
 .form-group input:focus,
-.form-group select:focus {
+.form-group select:focus,
+.form-group textarea:focus {
   outline: none;
   border: solid 3px var(--primary-color);
 }
@@ -616,7 +618,9 @@ button:hover {
   font-style: italic;
   font-weight: 500;
 }
-
+.form-group textarea {
+  width: 100%;
+}
 /* =================== style thong bao =============================== */
 .alert-success {
   padding: 10px;
