@@ -192,12 +192,12 @@ $msg_type = getSessionFlash('msg_type');
                     </td>
 
                     <td>
-                        <a href="?module=users&action=edit&id=<?php echo $item['ISBN'];?>" class="btn btn-warning">
+                        <a href="?module=books&action=edit&isbn=<?php echo $item['ISBN'];?>" class="btn btn-warning">
                             <i class="fa-solid fa-pencil"></i>
                         </a>
                     </td>
                     <td>
-                        <a href="?module=users&action=delete&id=<?php echo $item['ISBN'];?>" class="btn btn-danger"
+                        <a href="?module=books&action=delete&isbn=<?php echo $item['ISBN'];?>" class="btn btn-danger"
                             onclick="return confirm('Bạn có chắc chắn muốn xoá không?')">
                             <i class="fa-solid fa-trash"></i>
                         </a>

@@ -91,6 +91,7 @@ if(isPost()){
             'nhaXuatBanId' => $filter['nhaXuatBanId'],
             'hinhAnh' => $thumnail,
             'moTa' => $filter['moTa'],
+            'slug' => $filter['slug'],
             'create_at' => date('Y:m:d H:i:s')
         ];
         $insertStatus = insert('sach', $dataInsert);
@@ -272,19 +273,66 @@ $errorArr = getSessionFlash('errors');
                         <label for="hinhAnh">Hình ảnh</label>
                         <input type="file" id="hinhAnh" name="hinhAnh">
                     </div>
-                    <div class="form-group">
-                        <img class="img-add-book" style="display: none;" src="" alt="">
+                    <div id="preview_img-wrapper" class="form-group form-group-img-wrapper">
+                        <img id="preview_img" class="img-add-book" src="" alt="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="moTa">Mô tả sách</label>
                     <textarea id="moTa" name="moTa" rows="5" cols="50" placeholder="Nhập mô tả sách..."></textarea>
                 </div>
+                <div class="form-group">
+                    <label for="slug">slug</label>
+                    <textarea id="slug" name="slug" rows="1" cols="50" placeholder="" readonly></textarea>
+                </div>
 
                 <button type="submit">Thêm sách</button>
             </form>
         </div>
     </div>
+    <!-- script -->
+    <script>
+    const thumbInput = document.getElementById('hinhAnh');
+    const previewImg = document.getElementById('preview_img');
+    const preview_img_wrapper = document.getElementById('preview_img-wrapper');
+
+    thumbInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.setAttribute('src', e.target.result);
+                previewImg.style.display = 'block';
+                preview_img_wrapper.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+
+        } else {
+            previewImg.style.display = 'none';
+            preview_img_wrapper.style.display = 'none';
+        }
+    });
+    </script>
+    <!-- slug -->
+    <script>
+    function createSlug(str) {
+        return str.toLowerCase() // chuyển ký tự thành chữ thường
+            .normalize('NFD') // chuyển ký tự có dấu thành tổ hợp: é -> e + ´
+            .replace(/[\u0300-\u036f]/g, '') // xóa dấu
+            .replace(/đ/g, 'd') // thay đ -> d
+            .replace(/[^a-z0-9\s-]/g, '') // xóa ký tự đặc biệt
+            .trim() // bỏ khoảng trắng đầu/cuối
+            .replace(/\s+/g, '-') // thay khoảng trắng -> -
+            .replace(/-+/g, '-'); // bỏ trùng dấu -
+    }
+
+    document.getElementById('tenSach').addEventListener('input', function() {
+        const getValue = this.value;
+
+        document.getElementById('slug').value = createSlug(getValue);
+    });
+    </script>
+
 </div>
 </div>
 

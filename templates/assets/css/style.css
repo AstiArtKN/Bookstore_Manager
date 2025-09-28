@@ -304,11 +304,25 @@ td.dashboard-col-top-book {
   font-size: 3rem;
   /* padding-right: 20px; */
 }
+.img-add-book,
 .table-rank-img-mid {
   width: 180px;
   height: auto;
   object-fit: cover;
 }
+.img-add-book {
+  border: solid 1px var(--primary-color);
+  border-radius: 8px;
+}
+/* .form-group-img-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 250px;
+  padding: 10px;
+  border: solid 1px var(--primary-color);
+  border-radius: 8px;
+} */
 /* right */
 .dashboard__mid-title {
   font-size: 1.8rem;
@@ -596,6 +610,7 @@ button:hover {
   grid-template-columns: repeat(2, 1fr);
   column-gap: 20px;
   row-gap: 20px;
+  align-items: center;
 }
 .form-group input,
 .form-group select,
@@ -639,4 +654,7 @@ button:hover {
   color: #fff;
   font-size: 1.8rem;
   opacity: 0.8;
+}
+#slug {
+  background: #efefef;
 }

@@ -126,6 +126,7 @@ create table Sach
 (
 	ISBN varchar(100),
 	tenSach varchar(100) not null,
+	slug varchar(100) null,
 	ngonNguId varchar(10) not null,
 	kichThuoc varchar(50),
 	ngayXuatBan datetime null,

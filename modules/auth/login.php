@@ -68,15 +68,15 @@ if(isPost()){
                 $kiemtraMatKhau = password_verify($password,  $checkLoginName['matKhau']);
                 if($kiemtraMatKhau){
                     //TK chỉ login ở một nơi
-                    $nguoidung_Id = $checkLoginName['ID'];
+                //     $nguoidung_Id = $checkLoginName['ID'];
                     
-                    $checkAlready = getRows("SELECT * FROM token_login WHERE nguoidung_id = '$nguoidung_Id'");
-                    if($checkAlready > 0){
-                        setSessionFlash('msg', 'Tài khoản đang được đăng nhập ở nơi khác. Vui lòng thử lại sau.');
-                        setSessionFlash('msg_type', 'danger');
-                        redirect('?module=auth&action=login');
-                    }
-                   else{
+                //     $checkAlready = getRows("SELECT * FROM token_login WHERE nguoidung_id = '$nguoidung_Id'");
+                //     if($checkAlready > 0){
+                //         setSessionFlash('msg', 'Tài khoản đang được đăng nhập ở nơi khác. Vui lòng thử lại sau.');
+                //         setSessionFlash('msg_type', 'danger');
+                //         redirect('?module=auth&action=login');
+                //     }
+                //    else{
                      //tạo token và insert vào bảng token_login
                     $token = sha1(uniqid().time());
 
@@ -104,7 +104,7 @@ if(isPost()){
                         setSessionFlash('msg', 'Đăng nhập không thành công.');
                         setSessionFlash('msg_type', 'danger');
                     }
-                   }
+                //    }
                 }else{
                     setSessionFlash('msg', 'Tên đăng nhập hoặc mật khẩu sai');
                     setSessionFlash('msg_type', 'danger');
