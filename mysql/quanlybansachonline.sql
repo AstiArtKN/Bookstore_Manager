@@ -46,6 +46,7 @@ create table NguoiDung
 	forgot_token varchar(500) null,
 	active_token VARCHAR(500) NULL,
 	create_at datetime null,
+	update_at datetime null,
 
 	constraint PK_NguoiDung primary key (ID),
 	constraint UNI_NguoiDung unique (tenNguoiDung)
@@ -56,6 +57,8 @@ create table token_login
 	ID INT AUTO_INCREMENT,
 	nguoidung_id varchar(100) null,
 	token varchar(200) null,
+	create_at datetime null,
+	update_at datetime null,
 
 	constraint PK_tokenlog_id primary key (ID)
 )
@@ -127,21 +130,23 @@ create table Sach
 	ISBN varchar(100),
 	tenSach varchar(100) not null,
 	slug varchar(100) null,
-	ngonNguId varchar(10) not null,
 	kichThuoc varchar(50),
 	ngayXuatBan datetime null,
 	soTrang int,
 	dinhDang varchar(100),
 	gia float not null,
-	giamGia float not null,
+	giamGia float  null,
 	soLuong bigint not null,
 	theLoaiId varchar(10) not null,
 	tacGiaId varchar(10) not null,
 	nhaXuatBanId varchar(10) not null,
 	moTa text,
 	hinhAnh varchar(200),
-    trangThaiId varchar(10) not null,
+    trangThaiId varchar(10)  null,
 	luotXem bigint,
+	create_at datetime null,
+	update_at datetime null,
+
 	
 	constraint PK_Sach primary key(ISBN)
 )
@@ -171,6 +176,8 @@ create table TacGiaSach
 	email varchar(100),
 	SDT varchar(20),
 	moTa text,
+	create_at datetime null,
+	update_at datetime null,
     
 	constraint PK_TacGiaSach primary key(ID)
 )
@@ -180,6 +187,8 @@ create table TheLoaiSach
 	ID varchar(10),
 	tenTheLoai varchar(100) not null,
 	moTa text,
+	create_at datetime null,
+	update_at datetime null,
     
 	constraint PK_TheLoaiSach primary key(ID)
 )
@@ -200,6 +209,8 @@ create table TheLoaiSach
 	moTa text,
 	email varchar(100) not null,
 	SDT varchar(20),
+	create_at datetime null,
+	update_at datetime null,
 
 	constraint PK_NhaXuatBan primary key(ID)
  )
@@ -295,7 +306,7 @@ create table HoaDonChiTiet
 	ISBN varchar(100),
 	soLuongSach int not null,
 	donGia float not null,
-	thanhTien float not null,
+	--thanhTien float not null,
 	
 	constraint PK_HoaDonChiTiet primary key(hoaDonId, ISBN)
  )
@@ -310,7 +321,52 @@ create table HoaDonChiTiet
 	 constraint UNI_tenTrangThaiHD unique (tenTrangThai)
  )
 
--- +/ Phần hóa đơn
+-- +/ Phần hóa đơn -> trigger
+
+DDELIMITER //
+
+CREATE TRIGGER trg_UpdateTongTien
+AFTER INSERT ON HoaDonChiTiet
+FOR EACH ROW
+BEGIN
+    UPDATE HoaDon
+    SET tongTien = (
+        SELECT SUM(soLuong * donGia)
+        FROM HoaDonChiTiet
+        WHERE hoaDonId = NEW.hoaDonId
+    )
+    WHERE ID = NEW.hoaDonId;
+END//
+
+CREATE TRIGGER trg_UpdateTongTien_Update
+AFTER UPDATE ON HoaDonChiTiet
+FOR EACH ROW
+BEGIN
+    UPDATE HoaDon
+    SET tongTien = (
+        SELECT SUM(soLuong * donGia)
+        FROM HoaDonChiTiet
+        WHERE hoaDonId = NEW.hoaDonId
+    )
+    WHERE ID = NEW.hoaDonId;
+END//
+
+CREATE TRIGGER trg_UpdateTongTien_Delete
+AFTER DELETE ON HoaDonChiTiet
+FOR EACH ROW
+BEGIN
+    UPDATE HoaDon
+    SET tongTien = (
+        SELECT SUM(soLuong * donGia)
+        FROM HoaDonChiTiet
+        WHERE hoaDonId = OLD.hoaDonId
+    )
+    WHERE ID = OLD.hoaDonId;
+END//
+
+DELIMITER ;
+
+
 
 -------------------------------------------------------------------------------------------------
 -- Các ràng buộc toàn vẹn

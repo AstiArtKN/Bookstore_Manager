@@ -56,7 +56,7 @@ if(isGet()){
 
 //xử lý trang
 $maxData = getRows("SELECT ISBN FROM sach");
-$perPage = 3;//so dong du lieu
+$perPage = 2;//so dong du lieu
 $maxPage = ceil($maxData/$perPage);
 $offset = 0;
 $page = 1;
@@ -81,8 +81,8 @@ FROM sach
 INNER JOIN `theloaisach` ON sach.theLoaiId = theloaisach.ID
 INNER JOIN `nhaxuatban` ON sach.nhaXuatBanId = nhaxuatban.ID
 INNER JOIN `tacgiasach` ON sach.tacGiaId = tacgiasach.ID
-$chuoiWhere
--- LIMIT $offset, $perPage
+$chuoiWhere 
+LIMIT $offset, $perPage
 ");
 
 // option html
