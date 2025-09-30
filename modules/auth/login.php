@@ -17,6 +17,9 @@ if (getSession('token_login')) {
         // Token không còn hợp lệ => xoá session
         removeSession('token_login');
     }
+
+
+    
 }
 
 /*
@@ -89,21 +92,25 @@ if(isPost()){
                         'create_at' => date('Y:m:d H:i:s'),
                         'nguoidung_id' => $checkLoginName['ID']
                     ];
+
+
+                    // kiểm tra tài khoản đăng nhập là khách hay qtv
+                    // kiểm tra tài khoản đăng nhập là khách hay qtv
                     $inserToken = insert('token_login',$data);
-                    if($inserToken){
-                        if($checkLoginName['quyenHanId']==="QTV" || $checkLoginName['quyenHanId']==="NV"){
+                    if ($inserToken) {
+                        if ($checkLoginName['quyenHanId'] === "QTV" || $checkLoginName['quyenHanId'] === "NV") {
+                            // Trang dành cho quản trị viên/nhân viên
+                            redirect('?module=dashboard&action=index');
+                        } else {
+                            // Trang dành cho khách hàng
+                            
                             redirect('/');
                         }
-                        else{
-                            redirect('?module=Store&action=index');
-                        }
-                        
-                        
-                    }
-                    else{
+                    } else {
                         setSessionFlash('msg', 'Đăng nhập không thành công.');
                         setSessionFlash('msg_type', 'danger');
                     }
+
                 //    }
                 }else{
                     setSessionFlash('msg', 'Tên đăng nhập hoặc mật khẩu sai');

@@ -265,6 +265,7 @@ function redirect($path, $pathFull = false){
     }
 }
 
+
 //hàm check login
 function isLogin(){
     $checklogin = false;
@@ -278,12 +279,31 @@ function isLogin(){
     }
 
     if(!$checkToken_login){
-        redirect('?module=auth&action=login');
+        // redirect('?module=auth&action=login');
+        redirect('?module=store&action=index');
     }
 
     return $checklogin;
     
 }
+
+// Hàm check login (chỉ kiểm tra, không redirect)
+// function isLogin(){
+//     $tokenlogin = getSession('token_login');
+//     if(empty($tokenlogin)){
+//         return false;
+//     }
+
+//     $checkToken_login = getOne("SELECT * FROM token_login WHERE token = '$tokenlogin'");
+//     if(!empty($checkToken_login)){
+//         return true;
+//     }
+
+//     // Nếu token sai thì xoá session
+//     removeSession('token_login');
+//     return false;
+// }
+
 
 
 //lấy thông tin người dùng đăng nhập

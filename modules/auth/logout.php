@@ -12,7 +12,7 @@ if(isLogin()){
 
     if($removeToken){
         removeSession('token_login');
-        redirect('?module=auth&action=login');
+        redirect('/');
     }
     else{
         setSessionFlash('msg', 'lỗi hệ thống TOKEN. Xin vui lòng thử lại sau.');

@@ -1,7 +1,7 @@
 <?php
 const _KTHopLe = true;
 
-const _MODULES = 'dashboard';
+const _MODULES = 'Store';
 const _ACTION = 'index';
 
 //echo _KTHopLe;
