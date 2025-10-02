@@ -9,7 +9,7 @@ $user_detail = getCurrentUserFromToken();
 
 
 $getBookManga = getAll("SELECT sach.ISBN, sach.tenSach, tacgiasach.tenTacGia, theloaisach.tenTheLoai,
-sach.gia, sach.kichThuoc, nhaxuatban.tenNhaXuatBan, sach.moTa, sach.hinhAnh
+sach.gia, sach.kichThuoc, nhaxuatban.tenNhaXuatBan, sach.moTa, sach.hinhAnh, sach.slug
 FROM sach
 INNER JOIN tacgiasach ON sach.tacGiaId = tacgiasach.ID
 INNER JOIN theloaisach ON sach.theLoaiId = theloaisach.ID
@@ -40,11 +40,15 @@ $msg_type = getSessionFlash('msg_type');
                 <div class="hero__content">
                     <h1 class="hero__heading">Cửa hàng sách K-Books</h1>
                     <p class="hero__desc">Kho sách và truyện tranh khổng lồ</p>
-                    <a href="?module=auth&action=login" class="btn hero__btn">Đăng Nhập Ngay</a>
+
                     <?php if(!empty($user_detail)): ?>
                     <a href="?module=auth&action=login" class="btn hero__btn">xin chào,
                         <?php echo $user_detail['tenNguoiDung']; ?></a>
                     <a href="?module=auth&action=logout" class="btn hero__btn">Đăng xuất</a>
+                    <?php
+                        else:
+                     ?>
+                    <a href="?module=auth&action=login" class="btn hero__btn">Đăng Nhập Ngay</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -96,9 +100,14 @@ $msg_type = getSessionFlash('msg_type');
                     <!-- item 1 -->
                     <?php foreach($getBookManga as $item): ?>
                     <article class="service-item">
-                        <img src="<?php echo $item['hinhAnh']; ?>" alt="CROOMING" class="service-item__img" />
+                        <a
+                            href="?module=store&action=book_detail&isbn=<?php echo $item['ISBN']; ?>&<?php echo $item['slug'];?>">
+                            <img src="<?php echo $item['hinhAnh']; ?>" alt="CROOMING" class="service-item__img" /></a>
                         <div class="service-item__content">
-                            <h3 class="service-item__heading"><?php echo $item['tenSach']; ?></h3>
+                            <a
+                                href="?module=store&action=book_detail&isbn=<?php echo $item['ISBN']; ?>&<?php echo $item['slug'];?>">
+                                <h3 class="service-item__heading"><?php echo $item['tenSach']; ?></h3>
+                            </a>
 
                             <p class="service-detail-item__desc feature-detail-item__desc line-clamp line-2">
                                 Giá: <span><?php echo $item['gia'];?> đ</span>
@@ -144,8 +153,7 @@ $msg_type = getSessionFlash('msg_type');
                     Sách hỗ trợ các kiến thức, kỹ năng thiết yếu và quan trọng trong
                     đời sống
                 </p>
-                <div class="service-detail__top--list" data-aos="fade-left" data-aos-anchor="#example-anchor"
-                    data-aos-offset="500" data-aos-delay="700" data-aos-duration="1000">
+                <div class="service-detail__top--list">
                     <!-- item 1 -->
                     <article class="service-detail-item sdi1">
                         <div class="service-detail-item-img__wrapper">
@@ -180,138 +188,6 @@ $msg_type = getSessionFlash('msg_type');
                         </div>
                     </article>
 
-                    <!-- item 2 -->
-                    <article class="service-detail-item sdi1">
-                        <div class="service-detail-item-img__wrapper">
-                            <img src="./assets/images/svdetail1.png" alt="Sạch Sẽ" class="service-detail-item__img" />
-                        </div>
-
-                        <p class="service-detail-item__title line-clamp">
-                            Tư duy ngược - bìa cứng - đặc biệt
-                        </p>
-                        <p class="service-detail-item__desc line-clamp line-2">
-                            Giá: <span>45.000đ</span>
-                        </p>
-                        <div class="service-detail-item__acction">
-                            <!-- Form thêm vào giỏ hàng -->
-                            <form action="" method="POST">
-                                <input type="hidden" name="product_id" value="php" />
-                                <input type="hidden" name="quantity" value="1" />
-                                <button type="submit" name="add_to_cart"
-                                    class="service-detail-item__acction--add add-to">
-                                    Thêm vào giỏ
-                                </button>
-                            </form>
-
-                            <!-- Form mua ngay -->
-                            <form action="checkout.php" method="POST">
-                                <input type="hidden" name="product_id" value="php" />
-                                <input type="hidden" name="quantity" value="1" />
-                                <button type="submit" name="buy_now" class="service-detail-item__acction--buy buy-now">
-                                    Mua ngay
-                                </button>
-                            </form>
-                        </div>
-                    </article>
-                    <!-- item 3 -->
-                    <article class="service-detail-item sdi1">
-                        <div class="service-detail-item-img__wrapper">
-                            <img src="./assets/images/svdetail1.png" alt="Sạch Sẽ" class="service-detail-item__img" />
-                        </div>
-
-                        <p class="service-detail-item__title line-clamp">
-                            Tư duy ngược - bìa cứng - đặc biệt
-                        </p>
-                        <p class="service-detail-item__desc line-clamp line-2">
-                            Giá: <span>45.000đ</span>
-                        </p>
-                        <div class="service-detail-item__acction">
-                            <!-- Form thêm vào giỏ hàng -->
-                            <form action="" method="POST">
-                                <input type="hidden" name="product_id" value="php" />
-                                <input type="hidden" name="quantity" value="1" />
-                                <button type="submit" name="add_to_cart"
-                                    class="service-detail-item__acction--add add-to">
-                                    Thêm vào giỏ
-                                </button>
-                            </form>
-
-                            <!-- Form mua ngay -->
-                            <form action="checkout.php" method="POST">
-                                <input type="hidden" name="product_id" value="php" />
-                                <input type="hidden" name="quantity" value="1" />
-                                <button type="submit" name="buy_now" class="service-detail-item__acction--buy buy-now">
-                                    Mua ngay
-                                </button>
-                            </form>
-                        </div>
-                    </article>
-                    <!-- item 4 -->
-                    <article class="service-detail-item sdi1">
-                        <div class="service-detail-item-img__wrapper">
-                            <img src="./assets/images/svdetail1.png" alt="Sạch Sẽ" class="service-detail-item__img" />
-                        </div>
-
-                        <p class="service-detail-item__title line-clamp">
-                            Tư duy ngược - bìa cứng - đặc biệt
-                        </p>
-                        <p class="service-detail-item__desc line-clamp line-2">
-                            Giá: <span>45.000đ</span>
-                        </p>
-                        <div class="service-detail-item__acction">
-                            <!-- Form thêm vào giỏ hàng -->
-                            <form action="" method="POST">
-                                <input type="hidden" name="product_id" value="php" />
-                                <input type="hidden" name="quantity" value="1" />
-                                <button type="submit" name="add_to_cart"
-                                    class="service-detail-item__acction--add add-to">
-                                    Thêm vào giỏ
-                                </button>
-                            </form>
-
-                            <!-- Form mua ngay -->
-                            <form action="checkout.php" method="POST">
-                                <input type="hidden" name="product_id" value="php" />
-                                <input type="hidden" name="quantity" value="1" />
-                                <button type="submit" name="buy_now" class="service-detail-item__acction--buy buy-now">
-                                    Mua ngay
-                                </button>
-                            </form>
-                        </div>
-                    </article>
-                    <!-- item 5 -->
-                    <article class="service-detail-item sdi1">
-                        <div class="service-detail-item-img__wrapper">
-                            <img src="./assets/images/svdetail1.png" alt="Sạch Sẽ" class="service-detail-item__img" />
-                        </div>
-
-                        <p class="service-detail-item__title line-clamp">
-                            Tư duy ngược - bìa cứng - đặc biệt
-                        </p>
-                        <p class="service-detail-item__desc line-clamp line-2">
-                            Giá: <span>45.000đ</span>
-                        </p>
-                        <div class="service-detail-item__acction">
-                            <!-- Form thêm vào giỏ hàng -->
-                            <form action="" method="POST">
-                                <input type="hidden" name="product_id" value="php" />
-                                <input type="hidden" name="quantity" value="1" />
-                                <button type="submit" name="add_to_cart"
-                                    class="service-detail-item__acction--add add-to">
-                                    Thêm vào giỏ
-                                </button>
-                            </form>
-
-                            <!-- Form mua ngay -->
-                            <form action="checkout.php" method="POST">
-                                <input type="hidden" name="product_id" value="php" />
-                                <input type="hidden" name="quantity" value="1" />
-                                <button type="submit" name="buy_now" class="service-detail-item__acction--buy buy-now">
-                                    Mua ngay
-                                </button>
-                            </form>
-                        </div>
-                    </article>
                 </div>
             </div>
         </div>

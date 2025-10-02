@@ -4,6 +4,8 @@ if(!defined('_KTHopLe'))
     die('Truy cập không hợp lệ');
 }
 
+$getTheLoai = getAll("SELECT * FROM theloaisach");
+
 
 ?>
 <!DOCTYPE html>
@@ -67,8 +69,9 @@ if(!defined('_KTHopLe'))
             <!-- header top -->
             <div class="header__top">
                 <!-- logo -->
-                <a href="#!"><img src="<?php echo _HOST_URL_TEMPLATES; ?>/assets/images/logo_web_store.png"
-                        alt="K-BOOKS" class="header__logo" /></a>
+                <a href="<?php echo _HOST_URL ?>"><img
+                        src="<?php echo _HOST_URL_TEMPLATES; ?>/assets/images/logo_web_store.png" alt="K-BOOKS"
+                        class="header__logo" /></a>
                 <!-- navbar -->
                 <div class="navbar">
                     <ul class="navbar__list" id="nvpc">
@@ -77,6 +80,13 @@ if(!defined('_KTHopLe'))
                         </li>
                         <li class="navbar__item">
                             <a href="#!" class="navbar__link">Thể loại</a>
+                            <ul class="submenu">
+                                <?php foreach($getTheLoai as $item):?>
+                                <li class="submenu-item"><a
+                                        href="?module=store&action=book_cate&id=<?php echo $item['ID']?>"
+                                        class="submenu-link"><?php echo $item['tenTheLoai'] ?></a></li>
+                                <?php endforeach;?>
+                            </ul>
                         </li>
                         <li class="navbar__item">
                             <a href="#!" class="navbar__link">Hỗ trợ</a>
@@ -123,7 +133,8 @@ if(!defined('_KTHopLe'))
             <!-- menu top -->
             <div class="menu-drawer-top">
                 <!-- logo -->
-                <img src="./assets/images/logo_140x45.png" alt="K-pets" class="logo-mobile" />
+                <img src="<?php echo _HOST_URL_TEMPLATES; ?>/assets/images/logo_web_store.png" alt="K-BOOKS"
+                    class="logo-mobile" />
                 <!-- close -->
                 <label for="checked-menu">
                     <svg class="close-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
