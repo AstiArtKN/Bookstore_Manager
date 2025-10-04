@@ -483,22 +483,22 @@ td.dashboard-col-top-book {
   padding: 10px;
   vertical-align: middle;
 }
-.book-editor_table td {
+/* .book-editor_table td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
+} */
 
 .book-editor_table td {
   font-size: 1.4rem;
   color: var(--small-text-second);
 }
 
-.book-editor_table td.tensach,
+/* .book-editor_table td.tensach,
 .book-editor_table td.mota {
   white-space: normal;
   word-break: break-word;
-}
+} */
 /* .book-editor_table td {
   min-width: 150px !important;
 } */

@@ -70,8 +70,12 @@ if(isPost()){
         $errors['namelogin']['require'] = 'Vui lòng nhập tên tài khoản';
     }
     else{
+        // kiểm tra không được có khoảng trắng
+        if (preg_match('/\s/', trim($filter['namelogin']))) {
+            $errors['namelogin']['space'] = 'Tên tài khoản không được chứa khoảng trắng';
+        }
         // kiểm tra tên tài khoản đúng đinh dạng
-        if(strlen(trim($filter['namelogin'])) < 2){
+        else if(strlen(trim($filter['namelogin'])) < 2){
              $errors['namelogin']['Length'] = 'Tên tài khoản phải từ 2 ký tự trở lên';
         }
         else{// kiểm tra tên tài khoản có tồn tại không

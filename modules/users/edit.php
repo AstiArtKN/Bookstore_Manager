@@ -92,8 +92,12 @@ if(isPost()){
             $errors['tenNguoiDung']['require'] = 'Vui lòng nhập tên tài khoản';
         }
         else{
+            // kiểm tra tên tài khoản không chứa khoảng trắng
+            if (preg_match('/\s/', trim($filter['tenNguoiDung']))) {
+            $errors['tenNguoiDung']['space'] = 'Tên tài khoản không được chứa khoảng trắng';
+            }
             // kiểm tra tên tài khoản đúng đinh dạng
-            if(strlen(trim($filter['tenNguoiDung'])) < 2){
+            else if(strlen(trim($filter['tenNguoiDung'])) < 2){
                 $errors['tenNguoiDung']['Length'] = 'Tên tài khoản phải từ 2 ký tự trở lên';
             }
             else{// kiểm tra tên tài khoản có tồn tại không

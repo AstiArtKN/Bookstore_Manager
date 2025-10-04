@@ -76,7 +76,7 @@ $getTheLoai = getAll("SELECT * FROM theloaisach");
                 <div class="navbar">
                     <ul class="navbar__list" id="nvpc">
                         <li class="navbar__item">
-                            <a href="#!" class="navbar__link">Trang chủ</a>
+                            <a href="<?php echo _HOST_URL; ?>" class="navbar__link">Trang chủ</a>
                         </li>
                         <li class="navbar__item">
                             <a href="#!" class="navbar__link">Thể loại</a>
@@ -89,14 +89,16 @@ $getTheLoai = getAll("SELECT * FROM theloaisach");
                             </ul>
                         </li>
                         <li class="navbar__item">
-                            <a href="#!" class="navbar__link">Hỗ trợ</a>
+                            <a href="#hotro" class="navbar__link">Hỗ trợ</a>
                         </li>
                         <li class="navbar__item">
                             <!-- search -->
                             <div class="header-search">
                                 <form action="">
-                                    <input class="header-search__input" type="search" id="search-book"
-                                        name="search-book" placeholder="nhập tên sách để tìm sách" />
+                                    <input type="hidden" name="module" value="store">
+                                    <input type="hidden" name="action" value="book_search">
+                                    <input class="header-search__input" type="search" id="search_book"
+                                        name="search_book" placeholder="nhập tên sách để tìm sách" />
                                     <button type="submit" class="header-search__btn btn">
                                         Tìm
                                     </button>

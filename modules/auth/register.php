@@ -61,24 +61,27 @@ if(isPost()){
         }
     }
 
-     //validate namelogin
-    if(empty(trim($filter['namelogin']))){
-        $errors['namelogin']['require'] = 'Vui lòng nhập tên tài khoản';
-    }
-    else{
-        // kiểm tra tên tài khoản đúng đinh dạng
-        if(strlen(trim($filter['namelogin'])) < 2){
-             $errors['namelogin']['Length'] = 'Tên tài khoản phải từ 2 ký tự trở lên';
-        }
-        else{// kiểm tra tên tài khoản có tồn tại không
-            $namelogin = $filter['namelogin'];
+   //validate namelogin
+if (empty(trim($filter['namelogin']))) {
+    $errors['namelogin']['require'] = 'Vui lòng nhập tên tài khoản';
+} else {
+    $namelogin = trim($filter['namelogin']);
 
-            $checkEmail = getRows("SELECT * FROM nguoidung WHERE tenNguoiDung = '$namelogin' ");
-            if($checkEmail > 0){//email đã tồn tại
-                 $errors['namelogin']['check'] = 'tài khoản đã tồn tại';
-            }
+    // kiểm tra không được có khoảng trắng
+    if (preg_match('/\s/', $namelogin)) {
+        $errors['namelogin']['space'] = 'Tên tài khoản không được chứa khoảng trắng';
+    }
+    // kiểm tra độ dài
+    else if (strlen($namelogin) < 2) {
+        $errors['namelogin']['Length'] = 'Tên tài khoản phải từ 2 ký tự trở lên';
+    } else {
+        // kiểm tra tên tài khoản có tồn tại không
+        $checkUser = getRows("SELECT * FROM nguoidung WHERE tenNguoiDung = '$namelogin' ");
+        if ($checkUser > 0) {
+            $errors['namelogin']['check'] = 'Tài khoản đã tồn tại';
         }
     }
+}
 
     //validate pass
     if(empty($filter['pass'])){

@@ -5,7 +5,7 @@ if(!defined('_KTHopLe'))
 }
 ?>
 
-<footer class="footer">
+<footer class="footer" id="hotro">
     <div class="container">
         <div class="footer-inner">
             <div class="footer-left">

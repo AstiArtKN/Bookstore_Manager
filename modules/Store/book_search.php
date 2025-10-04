@@ -6,25 +6,18 @@ if(!defined('_KTHopLe'))
 
 layout('header_store');
 
-$getData = filterData('get');
-
-if(empty($getData['id'])){
-    $getid = $getData['slt_category'];
-}
-else{
-    $getid = $getData['id'];
-}
-$slt_cate = $getid;
+$filter = filterData('get');
+$getNameSearch = $filter['search_book'];
 
 //xử lý trang
-$maxData = getRows("SELECT ISBN FROM sach WHERE theLoaiId = '$slt_cate'");
-$perPage = 4;//so dong du lieu
+$maxData = getRows("SELECT ISBN FROM sach WHERE tenSach LIKE '%$getNameSearch%'");
+$perPage = 1;//so dong du lieu
 $maxPage = ceil($maxData/$perPage);
 $offset = 0;
 $page = 1;
 //getpage
-if(isset($getData['page'])){
-    $page = $getData['page'];
+if(isset($filter ['page'])){
+    $page = $filter ['page'];
 }
 
 if($page > $maxPage || $page < 1){
@@ -35,17 +28,19 @@ if(isset($page)){
     $offset = ($page - 1) * $perPage;
 }
 
-$getCategory = getAll("SELECT * FROM theloaisach");
 
-$getBookcate = getAll("SELECT sach.ISBN, sach.tenSach, tacgiasach.tenTacGia, theloaisach.tenTheLoai,
+
+
+$getDataSearch = getAll("SELECT sach.ISBN, sach.tenSach, tacgiasach.tenTacGia, theloaisach.tenTheLoai,
 sach.gia, sach.kichThuoc, nhaxuatban.tenNhaXuatBan, sach.moTa, sach.hinhAnh, sach.slug
 FROM sach
 INNER JOIN tacgiasach ON sach.tacGiaId = tacgiasach.ID
 INNER JOIN theloaisach ON sach.theLoaiId = theloaisach.ID
 INNER JOIN nhaxuatban ON sach.nhaXuatBanId = nhaxuatban.ID
-WHERE sach.theLoaiId = '$slt_cate'
+WHERE sach.tenSach LIKE '%$getNameSearch%'
 LIMIT $offset, $perPage
 ");
+
 
 if(!empty($_SERVER['QUERY_STRING'])){
     $queryString = $_SERVER['QUERY_STRING'];
@@ -55,11 +50,13 @@ if(!empty($_SERVER['QUERY_STRING'])){
 // print_r($getDetailUser);
 // die();
 
-if(!empty($slt_cate)){
+if(!empty($getNameSearch)){
     $maxData2 = getRows("SELECT ISBN FROM sach 
-     WHERE sach.theLoaiId = '$slt_cate'");
+     WHERE tenSach LIKE '%$getNameSearch%'");
     $maxPage = ceil($maxData2/$perPage);
 }
+
+
 
 ?>
 
@@ -67,33 +64,14 @@ if(!empty($slt_cate)){
     <div class="book-cate">
         <div class="container">
 
-            <form action="" method="get">
-                <input type="hidden" name="module" value="store">
-                <input type="hidden" name="action" value="book_cate">
-                <div class="book-cate__inner">
-                    <div class="book-cate__action">
-                        <div class="book-cate__select">
-                            <select id="slt_category" name="slt_category">
-                                <option value="">-chọn-</option>
-                                <?php foreach($getCategory as $key => $item): ?>
-                                <option value="<?php echo $item['ID']; ?>"
-                                    <?php echo ($item['ID'] == $getid) ? 'selected' : false;?>>
-                                    <?php echo $item['tenTheLoai']; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="book-cate__button">
-                            <button type="submit" class="book-cate__btn btn">Lọc</button>
-                        </div>
-
-                    </div>
-            </form>
-
+            <div class="result-search-name">
+                <h1>Tìm kiếm</h1>
+                <h3>kết quả tìm kiếm cho "<span><?php echo $getNameSearch; ?></span>"</h3>
+            </div>
 
             <div class="book-cate__list">
                 <?php 
-                    foreach($getBookcate as $item):
+                    foreach($getDataSearch as $item):
                  ?>
                 <!-- item -->
                 <article class="book-cate__item">
