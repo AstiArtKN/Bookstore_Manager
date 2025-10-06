@@ -37,18 +37,21 @@ if(!empty($getData)){
                         <img src="<?php echo $getThisBook['hinhAnh'];?>" alt="" class="book-detail__img" />
                     </div>
 
-                    <div class="book-detail__action">
-                        <!-- thêm vào giỏ hàng -->
-                        <form action="">
+
+                    <!-- thêm vào giỏ hàng -->
+                    <form action="">
+                        <div class="book-detail__action">
                             <button type="submit" class="btn btn-db-add">
                                 Thêm vào giỏ
                             </button>
-                        </form>
-                        <!-- mua ngay -->
-                        <form action="">
-                            <button type="submit" class="btn btn-db-buy">Mua ngay</button>
-                        </form>
-                    </div>
+                            <div class="quantity-box">
+                                <button type="button" class="qty-btn minus">-</button>
+                                <input type="text" name="quantity" class="qty-input" value="1" min="1" readonly>
+                                <button type="button" class="qty-btn plus">+</button>
+                            </div>
+                        </div>
+                    </form>
+
                 </div>
                 <!-- update -->
                 <!-- right -->
@@ -107,6 +110,25 @@ if(!empty($getData)){
             </div>
         </div>
     </section>
+    <!-- script -->
+    <script>
+    document.querySelectorAll('.quantity-box').forEach(box => {
+        const input = box.querySelector('.qty-input');
+        const minus = box.querySelector('.minus');
+        const plus = box.querySelector('.plus');
+
+        minus.addEventListener('click', () => {
+            let value = parseInt(input.value);
+            if (value > 1) input.value = value - 1;
+        });
+
+        plus.addEventListener('click', () => {
+            let value = parseInt(input.value);
+            input.value = value + 1;
+        });
+    });
+    </script>
+
 </main>
 
 <?php

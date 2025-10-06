@@ -100,13 +100,13 @@ if(!empty($getNameSearch)){
                         </form>
 
                         <!-- Form mua ngay -->
-                        <form action="checkout.php" method="POST">
+                        <!-- <form action="checkout.php" method="POST">
                             <input type="hidden" name="product_id" value="php" />
                             <input type="hidden" name="quantity" value="1" />
                             <button type="submit" name="buy_now" class="service-detail-item__acction--buy buy-now">
                                 Mua ngay
                             </button>
-                        </form>
+                        </form> -->
                     </div>
                 </article>
                 <?php 

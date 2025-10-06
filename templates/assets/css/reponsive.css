@@ -330,5 +330,10 @@
   .community__desc {
     font-size: 1.6rem;
   }
+
+  /*======================== book cart ================ */
+  .cart-footer {
+    flex-direction: column;
+  }
 }
 /* hidden */
