@@ -6,13 +6,24 @@ if(!defined('_KTHopLe'))
 
 layout('header_store');
 
+
+$cart = getSession('cart');
+
+// echo '<pre>';
+// print_r($cart);
+// echo '</pre>';
+// die();
+
+
 ?>
 
 <main>
     <div class="b-cart">
         <div class="container">
             <h2 class="cart-title">GIỎ HÀNG</h2>
-
+            <?php if ($cart === false || empty($cart)): ?>
+            <p style="font-size: 2rem; font-weight: 600; text-align: center;">giỏ hàng trống</p>
+            <?php else: ?>
             <form action="#">
                 <div class="tb-container">
                     <table class="cart-table">
@@ -27,43 +38,35 @@ layout('header_store');
                         </thead>
 
                         <tbody>
-                            <tr>
-                                <td><img src="https://cdn.hstatic.net/products/200000287623/5_giay_dem_nguoc__phu_thuy_duoc_yeu_manga_oneshot_bia_1_6f61addf8fbf4625bced233ccabf2072_master.png"
-                                        alt="book" />
-                                </td>
-                                <td>
-                                    <p class="cart-book-title">5 Giây Đếm Ngược, Phù Thủy Được Yêu</p>
-                                    <p class="cart-book-author">Tác giả: Aoi Akira</p>
-                                </td>
-                                <td>
-                                    <div class="quantity-box">
-                                        <button type="button" class="qty-btn minus">−</button>
-                                        <input type="text" value="1" class="qty-input" min="1" readonly />
-                                        <button type="button" class="qty-btn plus">+</button>
-                                    </div>
-                                </td>
-                                <td>152.000đ</td>
-                                <td><a href="#" class="remove">Xóa</a></td>
-                            </tr>
+                            <?php 
+                                $tongTien = 0;
+                                foreach($cart as $isbn => $item):
+                                    $thanhTien = $item['gia'] * $item['quantity'];
+                                    $tongTien += $thanhTien;
 
+                                
+                            ?>
                             <tr>
-                                <td><img src="https://cdn0.fahasa.com/media/catalog/product/g/i/given_9.jpg"
-                                        alt="book" />
+                                <td><img src="<?php echo $item['hinhAnh']; ?>" alt="book" />
                                 </td>
                                 <td>
-                                    <p class="cart-book-title">Given - Tập 9</p>
-                                    <p class="cart-book-author">Tác giả: Kizu Natsuki</p>
+                                    <p class="cart-book-title"><?php echo $item['tenSach']; ?></p>
+                                    <!-- <p class="cart-book-author">Tác giả: Aoi Akira</p> -->
                                 </td>
                                 <td>
                                     <div class="quantity-box">
                                         <button type="button" class="qty-btn minus">−</button>
-                                        <input type="text" value="2" class="qty-input" min="1" readonly />
+                                        <input type="text" value="<?php echo $item['quantity']; ?>" class="qty-input"
+                                            min="1" max=" <?php //xử lý phần số lượng sản phẩm 
+                                            $getThisBook = getOne("SELECT soLuong FROM SACH WHERE ISBN = '$isbn '");  
+                                            echo $getThisBook['soLuong']; ?> " readonly />
                                         <button type="button" class="qty-btn plus">+</button>
                                     </div>
                                 </td>
-                                <td>114.400đ</td>
+                                <td><?php echo $item['gia']; ?></td>
                                 <td><a href="#" class="remove">Xóa</a></td>
                             </tr>
+                            <?php endforeach;?>
                         </tbody>
                     </table>
                 </div>
@@ -76,7 +79,7 @@ layout('header_store');
                     </div>
 
                     <div class="cart-summary">
-                        <p><strong>Tổng cộng:</strong> <span>266.400đ</span></p>
+                        <p><strong>Tổng cộng:</strong> <span><?php echo $tongTien; ?></span></p>
 
                         <div class="cart-buttons">
                             <a href="#" class="btn btn-checkout">Thanh toán →</a>
@@ -84,6 +87,7 @@ layout('header_store');
                     </div>
                 </div>
             </form>
+            <?php endif; ?>
         </div>
     </div>
 </main>
@@ -94,14 +98,21 @@ document.querySelectorAll('.quantity-box').forEach(box => {
     const minus = box.querySelector('.minus');
     const plus = box.querySelector('.plus');
 
+    const max = parseInt(input.getAttribute('max')) || 9999; // phòng trường hợp không có max ;)))))
+
     minus.addEventListener('click', () => {
-        let val = parseInt(input.value);
-        if (val > 1) input.value = val - 1;
+        let value = parseInt(input.value);
+        if (value > 1) input.value = value - 1;
     });
 
     plus.addEventListener('click', () => {
-        let val = parseInt(input.value);
-        input.value = val + 1;
+        let value = parseInt(input.value);
+        if (value < max) {
+            input.value = value + 1;
+        } else {
+            // Nếu vượt quá max thì gán về giá trị tối đa
+            input.value = max;
+        }
     });
 });
 </script>
