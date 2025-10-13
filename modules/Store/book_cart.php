@@ -38,35 +38,35 @@ $cart = getSession('cart');
                         </thead>
 
                         <tbody>
+                        <tbody>
                             <?php 
                                 $tongTien = 0;
                                 foreach($cart as $isbn => $item):
                                     $thanhTien = $item['gia'] * $item['quantity'];
                                     $tongTien += $thanhTien;
-
-                                
                             ?>
-                            <tr>
-                                <td><img src="<?php echo $item['hinhAnh']; ?>" alt="book" />
-                                </td>
+                            <tr data-isbn="<?php echo $isbn; ?>">
+                                <td><img src="<?php echo $item['hinhAnh']; ?>" alt="book" /></td>
                                 <td>
                                     <p class="cart-book-title"><?php echo $item['tenSach']; ?></p>
-                                    <!-- <p class="cart-book-author">Tác giả: Aoi Akira</p> -->
                                 </td>
                                 <td>
                                     <div class="quantity-box">
                                         <button type="button" class="qty-btn minus">−</button>
                                         <input type="text" value="<?php echo $item['quantity']; ?>" class="qty-input"
-                                            min="1" max=" <?php //xử lý phần số lượng sản phẩm 
-                                            $getThisBook = getOne("SELECT soLuong FROM SACH WHERE ISBN = '$isbn '");  
-                                            echo $getThisBook['soLuong']; ?> " readonly />
+                                            min="1" max="<?php 
+                                             $getThisBook = getOne("SELECT soLuong FROM SACH WHERE ISBN = '$isbn'");
+                                                echo $getThisBook['soLuong'];
+                                        ?>" readonly />
                                         <button type="button" class="qty-btn plus">+</button>
                                     </div>
                                 </td>
-                                <td><?php echo $item['gia']; ?></td>
+                                <td class="price"><?php echo number_format($item['gia'], 0, ',', '.'); ?> ₫</td>
                                 <td><a href="#" class="remove">Xóa</a></td>
                             </tr>
-                            <?php endforeach;?>
+                            <?php endforeach; ?>
+                        </tbody>
+
                         </tbody>
                     </table>
                 </div>
@@ -79,7 +79,8 @@ $cart = getSession('cart');
                     </div>
 
                     <div class="cart-summary">
-                        <p><strong>Tổng cộng:</strong> <span><?php echo $tongTien; ?></span></p>
+                        <p><strong>Tổng cộng:</strong> <span><?php echo number_format($tongTien,0, ' ,', '.'); ?>
+                                ₫</span></p>
 
                         <div class="cart-buttons">
                             <a href="#" class="btn btn-checkout">Thanh toán →</a>
@@ -116,6 +117,82 @@ document.querySelectorAll('.quantity-box').forEach(box => {
     });
 });
 </script>
+<script>
+document.querySelectorAll('.quantity-box').forEach(box => {
+    const input = box.querySelector('.qty-input');
+    const minus = box.querySelector('.minus');
+    const plus = box.querySelector('.plus');
+    const tr = box.closest('tr');
+    const isbn = tr.dataset.isbn;
+
+    function updateQuantity(type) {
+        fetch("?module=store&action=update_cart", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    isbn,
+                    type
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    input.value = data.item.quantity;
+                    // tr.querySelector(".price").textContent = data.item.subtotal;
+                    document.querySelector(".cart-summary span").textContent = data.cart_total;
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => console.error("Lỗi:", err));
+    }
+
+    minus.addEventListener('click', () => updateQuantity('minus'));
+    plus.addEventListener('click', () => updateQuantity('plus'));
+});
+
+// Xoá sản phẩm bằng AJAX
+document.querySelectorAll('.remove').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const tr = this.closest('tr');
+        const isbn = tr.dataset.isbn;
+
+        if (!confirm("Xóa sản phẩm này khỏi giỏ hàng?")) return;
+
+        fetch("?module=store&action=remove_from_cart", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    isbn
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    tr.remove();
+                    document.querySelector(".cart-summary span").textContent = data.cart_total +
+                        " ₫";
+
+                    // Nếu giỏ trống -> thay nội dung toàn trang
+                    if (data.empty) {
+                        document.querySelector(".b-cart").innerHTML =
+                            "<p style='font-size:2rem; font-weight:600; text-align:center;'>Giỏ hàng trống</p>";
+                    }
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => console.error("Lỗi:", err));
+    });
+});
+</script>
+
+
 <?php
 layout('footer_store');
 ?>

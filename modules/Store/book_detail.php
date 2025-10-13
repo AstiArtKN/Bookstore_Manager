@@ -39,7 +39,7 @@ if(!empty($getData)){
 
 
                     <!-- thêm vào giỏ hàng -->
-                    <form id="addToCartForm" action="?module=store&action=add_to_cart" enctype="multipart/form-data"
+                    <form class="addToCartForm" action="?module=store&action=add_to_cart" enctype="multipart/form-data"
                         method="post">
                         <input type="hidden" name="module" value="store">
                         <input type="hidden" name="action" value="book_detail">
@@ -70,7 +70,8 @@ if(!empty($getData)){
                         <h1 class="book-detail-right__name">
                             <?php echo $getThisBook['tenSach'];?>
                         </h1>
-                        <h2 class="book-detail-right__price"><?php echo $getThisBook['gia'];?> đ</h2>
+                        <h2 class="book-detail-right__price">
+                            <?php echo number_format($getThisBook['gia'],0, ' ,', '.');?> đ</h2>
                         <div class="book-detail-right__lylich">
                             <p class="book-detail-right__lylich--content">
                                 <strong>Tác giả: </strong> <span><?php echo $getThisBook['tenTacGia'];?></span>
@@ -120,62 +121,7 @@ if(!empty($getData)){
             </div>
         </div>
     </section>
-    <!-- script -->
-    <script>
-    document.querySelectorAll('.quantity-box').forEach(box => {
-        const input = box.querySelector('.qty-input');
-        const minus = box.querySelector('.minus');
-        const plus = box.querySelector('.plus');
 
-        const max = parseInt(input.getAttribute('max')) || 9999; // phòng trường hợp không có max ;)))))
-
-        minus.addEventListener('click', () => {
-            let value = parseInt(input.value);
-            if (value > 1) input.value = value - 1;
-        });
-
-        plus.addEventListener('click', () => {
-            let value = parseInt(input.value);
-            if (value < max) {
-                input.value = value + 1;
-            } else {
-                // Nếu vượt quá max thì gán về giá trị tối đa
-                input.value = max;
-            }
-        });
-    });
-    </script>
-
-    <script>
-    document.getElementById("addToCartForm").addEventListener("submit", function(e) {
-        e.preventDefault();
-
-        const form = e.target;
-        const formData = new FormData(form);
-
-        fetch("?module=store&action=add_to_cart", {
-                method: "POST",
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    // Hiển thị thông báo
-                    alert("✅ " + data.message + "\nSố sản phẩm trong giỏ: " + data.cartCount);
-
-                    // Nếu bạn có hiển thị số giỏ hàng trên header:
-                    const cartBadge = document.getElementById("cart-count");
-                    if (cartBadge) cartBadge.textContent = data.cartCount;
-                } else {
-                    alert("❌ " + data.message);
-                }
-            })
-            .catch(err => {
-                console.error("Lỗi:", err);
-                alert("⚠️ Lỗi kết nối đến máy chủ!");
-            });
-    });
-    </script>
 
 
 </main>

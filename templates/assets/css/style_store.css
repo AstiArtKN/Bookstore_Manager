@@ -1081,6 +1081,9 @@ a {
   font-size: 1.4rem;
 }
 
+.btn-db-add-category {
+  font-size: 1.2rem !important;
+}
 /* ================== page list ======================== */
 .navpage {
   margin-top: 20px;
@@ -1160,8 +1163,7 @@ a {
 .cart-table th {
   text-align: left;
   padding: 10px;
-  border-bottom: 2px solid #ddd;
-  background: #f1f1f1;
+  font-weight: 600;
 }
 
 .cart-table td {
@@ -1242,16 +1244,6 @@ a {
   flex-wrap: wrap;
 }
 
-.btn {
-  display: inline-block;
-  padding: 10px 16px;
-  border-radius: 6px;
-  text-decoration: none;
-  color: #fff;
-  cursor: pointer;
-  font-size: 14px;
-}
-
 .btn-checkout {
   background-color: #009933;
 }
@@ -1269,4 +1261,15 @@ a {
 
 .continue-shopping:hover {
   text-decoration: underline;
+}
+
+/* ===  điều chỉnh các nút thêm sản phẩm */
+.book-category__action {
+  margin-top: 10px;
+  flex-direction: column;
+  row-gap: 10px;
+}
+.btn-db-add-category {
+  max-width: 80px;
+  line-height: 30px;
 }

@@ -38,7 +38,7 @@ if(isset($page)){
 $getCategory = getAll("SELECT * FROM theloaisach");
 
 $getBookcate = getAll("SELECT sach.ISBN, sach.tenSach, tacgiasach.tenTacGia, theloaisach.tenTheLoai,
-sach.gia, sach.kichThuoc, nhaxuatban.tenNhaXuatBan, sach.moTa, sach.hinhAnh, sach.slug
+sach.gia, sach.kichThuoc, nhaxuatban.tenNhaXuatBan, sach.moTa, sach.hinhAnh, sach.slug, sach.soLuong
 FROM sach
 INNER JOIN tacgiasach ON sach.tacGiaId = tacgiasach.ID
 INNER JOIN theloaisach ON sach.theLoaiId = theloaisach.ID
@@ -105,21 +105,37 @@ if(!empty($slt_cate)){
                         </a>
                     </div>
                     <p class="service-detail-item__title book-cate__title feature-detail-item__title line-clamp line-1">
-                        <?php echo $item['tenSach'] ?>
+                        <?php echo $item['tenSach']; ?>
                     </p>
                     <p
                         class="service-detail-item__desc book-cate__title__desc feature-detail-item__desc line-clamp line-1">
-                        Giá: <span> <?php echo $item['gia'] ?></span>
+                        Giá: <span> <?php  echo number_format($item['gia'],0, ' ,', '.'); ?> đ</span>
                     </p>
                     <div class="service-detail-item__acction feature-item__action">
                         <!-- Form thêm vào giỏ hàng -->
-                        <form action="" method="POST">
-                            <input type="hidden" name="product_id" value="php" />
-                            <input type="hidden" name="quantity" value="1" />
-                            <button type="submit" name="add_to_cart" class="service-detail-item__acction--add add-to">
-                                Thêm vào giỏ
-                            </button>
+                        <form class="addToCartForm" action="?module=store&action=add_to_cart"
+                            enctype="multipart/form-data" method="post">
+                            <input type="hidden" name="module" value="store">
+                            <input type="hidden" name="action" value="book_detail">
+                            <input type="hidden" name="isbn" value="<?php echo $item['ISBN']; ?>">
+                            <input type="hidden" name="tenSach" value="<?php echo $item['tenSach']; ?>">
+                            <input type="hidden" name="gia" value="<?php echo $item['gia']; ?>">
+                            <input type="hidden" name="hinhAnh" value="<?php echo $item['hinhAnh']; ?>">
+                            <input type="hidden" name="slug" value="<?php echo $item['slug']; ?>">
+                            <div class="book-detail__action book-category__action">
+
+                                <button type="submit" name="add_to_carts" class="btn btn-db-add btn-db-add-category">
+                                    Thêm vào giỏ
+                                </button>
+                                <div class="quantity-box">
+                                    <button type="button" class="qty-btn minus">-</button>
+                                    <input type="text" name="quantity" class="qty-input" value="1" min="1"
+                                        max="<?php echo $item['soLuong']; ?>" readonly>
+                                    <button type="button" class="qty-btn plus">+</button>
+                                </div>
+                            </div>
                         </form>
+
                     </div>
                 </article>
                 <?php 
