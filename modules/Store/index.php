@@ -9,7 +9,7 @@ $user_detail = getCurrentUserFromToken();
 
 
 $getBookManga = getAll("SELECT sach.ISBN, sach.tenSach, tacgiasach.tenTacGia, theloaisach.tenTheLoai,
-sach.gia, sach.kichThuoc, nhaxuatban.tenNhaXuatBan, sach.moTa, sach.hinhAnh, sach.slug
+sach.gia, sach.kichThuoc, nhaxuatban.tenNhaXuatBan, sach.moTa, sach.hinhAnh, sach.slug, sach.soLuong
 FROM sach
 INNER JOIN tacgiasach ON sach.tacGiaId = tacgiasach.ID
 INNER JOIN theloaisach ON sach.theLoaiId = theloaisach.ID
@@ -18,7 +18,15 @@ LIMIT 3
 ");
 // print_r($getBookManga);die();
 $getBookLN = '';
-$getBookdoiSong_KH = '';
+$getBookdoiSong_KH = getAll("SELECT sach.ISBN, sach.tenSach, tacgiasach.tenTacGia, theloaisach.tenTheLoai,
+sach.gia, sach.kichThuoc, nhaxuatban.tenNhaXuatBan, sach.moTa, sach.hinhAnh, sach.slug, sach.soLuong
+FROM sach
+INNER JOIN tacgiasach ON sach.tacGiaId = tacgiasach.ID
+INNER JOIN theloaisach ON sach.theLoaiId = theloaisach.ID
+INNER JOIN nhaxuatban ON sach.nhaXuatBanId = nhaxuatban.ID
+WHERE theloaisach.ID = 'TL1'
+LIMIT 5
+");
 $getAllNewBook = '';
 
 
@@ -112,25 +120,30 @@ $msg_type = getSessionFlash('msg_type');
                             <p class="service-detail-item__desc feature-detail-item__desc line-clamp line-2">
                                 Giá: <span><?php echo $item['gia'];?> đ</span>
                             </p>
-                            <div class="service-detail-item__acction feature-item__action">
+                            <div class="service-detail-item__acction">
                                 <!-- Form thêm vào giỏ hàng -->
-                                <form action="" method="POST">
-                                    <input type="hidden" name="product_id" value="php" />
-                                    <input type="hidden" name="quantity" value="1" />
-                                    <button type="submit" name="add_to_cart"
-                                        class="service-detail-item__acction--add add-to">
-                                        Thêm vào giỏ
-                                    </button>
-                                </form>
+                                <form class="addToCartForm" action="?module=store&action=add_to_cart"
+                                    enctype="multipart/form-data" method="post">
+                                    <input type="hidden" name="module" value="store">
+                                    <input type="hidden" name="action" value="book_detail">
+                                    <input type="hidden" name="isbn" value="<?php echo $item['ISBN']; ?>">
+                                    <input type="hidden" name="tenSach" value="<?php echo $item['tenSach']; ?>">
+                                    <input type="hidden" name="gia" value="<?php echo $item['gia']; ?>">
+                                    <input type="hidden" name="hinhAnh" value="<?php echo $item['hinhAnh']; ?>">
+                                    <input type="hidden" name="slug" value="<?php echo $item['slug']; ?>">
+                                    <div class="book-detail__action book-category__action">
 
-                                <!-- Form mua ngay -->
-                                <form action="checkout.php" method="POST">
-                                    <input type="hidden" name="product_id" value="php" />
-                                    <input type="hidden" name="quantity" value="1" />
-                                    <button type="submit" name="buy_now"
-                                        class="service-detail-item__acction--buy buy-now">
-                                        Mua ngay
-                                    </button>
+                                        <button type="submit" name="add_to_carts"
+                                            class="btn btn-db-add btn-db-add-category">
+                                            Thêm vào giỏ
+                                        </button>
+                                        <div class="quantity-box">
+                                            <button type="button" class="qty-btn minus">-</button>
+                                            <input type="text" name="quantity" class="qty-input" value="1" min="1"
+                                                max="<?php echo $item['soLuong']; ?>" readonly>
+                                            <button type="button" class="qty-btn plus">+</button>
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -155,39 +168,53 @@ $msg_type = getSessionFlash('msg_type');
                 </p>
                 <div class="service-detail__top--list">
                     <!-- item 1 -->
+                    <?php foreach($getBookdoiSong_KH as $item): ?>
                     <article class="service-detail-item sdi1">
                         <div class="service-detail-item-img__wrapper">
-                            <img src="./assets/images/svdetail1.png" alt="Sạch Sẽ" class="service-detail-item__img" />
+                            <a
+                                href="?module=store&action=book_detail&isbn=<?php echo $item['ISBN']; ?>&<?php echo $item['slug'];?>">
+                                <img src="<?php echo $item['hinhAnh']; ?>" alt="sachk-h"
+                                    class="service-detail-item__img" /></a>
                         </div>
 
-                        <p class="service-detail-item__title line-clamp">
-                            Tư duy ngược - bìa cứng - đặc biệt
-                        </p>
+                        <a
+                            href="?module=store&action=book_detail&isbn=<?php echo $item['ISBN']; ?>&<?php echo $item['slug'];?>">
+                            <p class="service-detail-item__title line-clamp">
+                                <?php echo $item['tenSach']; ?>
+                            </p>
+                        </a>
                         <p class="service-detail-item__desc line-clamp line-2">
-                            Giá: <span>45.000đ</span>
+                            Giá: <span><?php echo $item['gia']; ?></span>
                         </p>
                         <div class="service-detail-item__acction">
                             <!-- Form thêm vào giỏ hàng -->
-                            <form action="" method="POST">
-                                <input type="hidden" name="product_id" value="php" />
-                                <input type="hidden" name="quantity" value="1" />
-                                <button type="submit" name="add_to_cart"
-                                    class="service-detail-item__acction--add add-to">
-                                    Thêm vào giỏ
-                                </button>
+                            <form class="addToCartForm" action="?module=store&action=add_to_cart"
+                                enctype="multipart/form-data" method="post">
+                                <input type="hidden" name="module" value="store">
+                                <input type="hidden" name="action" value="book_detail">
+                                <input type="hidden" name="isbn" value="<?php echo $item['ISBN']; ?>">
+                                <input type="hidden" name="tenSach" value="<?php echo $item['tenSach']; ?>">
+                                <input type="hidden" name="gia" value="<?php echo $item['gia']; ?>">
+                                <input type="hidden" name="hinhAnh" value="<?php echo $item['hinhAnh']; ?>">
+                                <input type="hidden" name="slug" value="<?php echo $item['slug']; ?>">
+                                <div class="book-detail__action book-category__action">
+
+                                    <button type="submit" name="add_to_carts"
+                                        class="btn btn-db-add btn-db-add-category">
+                                        Thêm vào giỏ
+                                    </button>
+                                    <div class="quantity-box">
+                                        <button type="button" class="qty-btn minus">-</button>
+                                        <input type="text" name="quantity" class="qty-input" value="1" min="1"
+                                            max="<?php echo $item['soLuong']; ?>" readonly>
+                                        <button type="button" class="qty-btn plus">+</button>
+                                    </div>
+                                </div>
                             </form>
 
-                            <!-- Form mua ngay -->
-                            <form action="checkout.php" method="POST">
-                                <input type="hidden" name="product_id" value="php" />
-                                <input type="hidden" name="quantity" value="1" />
-                                <button type="submit" name="buy_now" class="service-detail-item__acction--buy buy-now">
-                                    Mua ngay
-                                </button>
-                            </form>
                         </div>
                     </article>
-
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>

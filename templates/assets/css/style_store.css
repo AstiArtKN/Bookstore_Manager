@@ -379,6 +379,7 @@ a {
   object-fit: cover;
   margin: 0 auto;
   border-radius: 8px;
+  aspect-ratio: 3 / 4;
 }
 .service-item:hover .service-item__content {
   bottom: 24px;
@@ -409,6 +410,9 @@ a {
 .service-item__btn {
   margin-top: 12px;
 }
+.service-detail-item__action {
+  margin-top: 5px;
+}
 
 /* =============================== service detail ===================================== */
 .service-detail {
@@ -433,17 +437,18 @@ a {
 }
 
 /* --------------- top list ---------------------*/
-/* .service-detail__top--list {
+.service-detail__top--list {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   column-gap: 10px;
   margin-top: 20px;
-} */
+}
 
 .service-detail-item__title {
   margin-top: 20px;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   color: #000000;
+  font-weight: 500;
 }
 .service-detail-item__desc {
   margin-top: 10px;
@@ -479,6 +484,7 @@ a {
   height: auto;
   object-fit: cover;
   transition: 0.5s;
+  aspect-ratio: 3 / 4;
 }
 .service-detail-item:hover .service-detail-item__img {
   transform: scale(1.1);
@@ -499,6 +505,7 @@ a {
 .sdi5 {
   background: #fd9ce6;
 }
+
 .service-detail-item__acction--buy,
 .service-detail-item__acction--add {
   margin-top: 10px;
