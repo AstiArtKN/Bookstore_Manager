@@ -83,7 +83,7 @@ $cart = getSession('cart');
                                 ₫</span></p>
 
                         <div class="cart-buttons">
-                            <a href="#" class="btn btn-checkout">Thanh toán →</a>
+                            <a href="?module=store&action=check_out" class="btn btn-checkout">Thanh toán →</a>
                         </div>
                     </div>
                 </div>
