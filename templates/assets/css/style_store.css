@@ -1491,6 +1491,18 @@ a {
   line-height: 1.7;
   font-size: 1.4rem;
 }
+.form-checkout-detail .qty-input {
+  width: 40px;
+  text-align: center;
+  line-height: 0.5;
+  font-size: 1.6rem;
+  outline: none;
+  background: #333;
+  margin: 0;
+  color: #fff;
+  border-radius: 0;
+}
+
 @media (max-width: 768px) {
   .checkout-container {
     grid-template-columns: 1fr;
