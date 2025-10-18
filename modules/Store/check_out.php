@@ -14,25 +14,10 @@ if(empty($cart)){
     redirect("?module=errors&action=404");
 }
 
-// Lấy dữ liệu các tỉnh
-$tinhList = getAll("SELECT ID, tenTinhThanhPho FROM TinhThanhPho ORDER BY tenTinhThanhPho");
-
-// Lấy dữ liệu huyện theo tỉnh nếu đã chọn
-$huyenList = [];
-if (!empty($_POST['tinh'])) {
-    $tinhId = (int)$_POST['tinh'];
-    $huyenList = getAll("SELECT ID, tenQuanHuyen FROM QuanHuyen WHERE tinhThanhPhoId = $tinhId ORDER BY tenQuanHuyen");
-}
-
-// Lấy dữ liệu xã theo huyện nếu đã chọn
-$xaList = [];
-if (!empty($_POST['huyen'])) {
-    $huyenId = (int)$_POST['huyen'];
-    $xaList = getAll("SELECT ID, tenXaPhuong FROM XaPhuong WHERE quanHuyenId = $huyenId ORDER BY tenXaPhuong");
-}
-?>
 
 ?>
+
+
 
 <main>
     <div class="checkout" style="background-color: #f6f6f6;">
@@ -88,27 +73,31 @@ if (!empty($_POST['huyen'])) {
                                     <input type="text" name="address" placeholder="Số nhà, tên đường">
                                 </div>
 
-                                <!-- <div>
+                                <div>
                                     <label>Tỉnh / Thành phố:</label>
-                                    <select id="tinh" name="tinh" class="select-diachi">
+                                    <select id="tinh" name="tinh">
                                         <option value="">-- Chọn tỉnh --</option>
+                                        <?php
+                                            $tinhList = getAll("SELECT * FROM tinhTHANHPHO ORDER BY tenTinhThanhPho");
+                                            foreach ($tinhList as $tinh) {
+                                                echo '<option value="'.$tinh['ID'].'">'.$tinh['tenTinhThanhPho'].'</option>';
+                                            }
+                                            ?>
                                     </select>
 
                                     <label>Huyện / Quận:</label>
-                                    <select id="huyen" name="huyen" class="select-diachi" disabled>
+                                    <select id="huyen" name="huyen" disabled>
                                         <option value="">-- Chọn huyện --</option>
                                     </select>
 
                                     <label>Xã / Phường:</label>
-                                    <select id="xa" name="xa" class="select-diachi" disabled>
+                                    <select id="xa" name="xa" disabled>
                                         <option value="">-- Chọn xã --</option>
                                     </select>
 
-                                </div> -->
+                                </div>
 
                             </div>
-
-
                         </div>
                     </div>
 
@@ -276,6 +265,69 @@ if (!empty($_POST['huyen'])) {
     });
     </script>
 
+    <script>
+    document.getElementById('tinh').addEventListener('change', function() {
+        const tinhId = this.value;
+        const huyenSelect = document.getElementById('huyen');
+        const xaSelect = document.getElementById('xa');
+
+        huyenSelect.innerHTML = '<option value="">-- Chọn huyện --</option>';
+        xaSelect.innerHTML = '<option value="">-- Chọn xã --</option>';
+        xaSelect.disabled = true;
+
+        if (tinhId === '') {
+            huyenSelect.disabled = true;
+            return;
+        }
+
+        fetch('?module=store&action=get_huyen', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'id=' + tinhId
+            })
+            .then(res => res.json())
+            .then(data => {
+                huyenSelect.disabled = false;
+                data.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.id;
+                    opt.textContent = item.tenQuanHuyen;
+                    huyenSelect.appendChild(opt);
+                });
+            });
+    });
+
+    document.getElementById('huyen').addEventListener('change', function() {
+        const huyenId = this.value;
+        const xaSelect = document.getElementById('xa');
+        xaSelect.innerHTML = '<option value="">-- Chọn xã --</option>';
+
+        if (huyenId === '') {
+            xaSelect.disabled = true;
+            return;
+        }
+
+        fetch('?module=store&action=get_xa', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'id=' + huyenId
+            })
+            .then(res => res.json())
+            .then(data => {
+                xaSelect.disabled = false;
+                data.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.id;
+                    opt.textContent = item.tenXaPhuong;
+                    xaSelect.appendChild(opt);
+                });
+            });
+    });
+    </script>
 
 
 </main>
