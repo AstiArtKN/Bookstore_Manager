@@ -73,8 +73,6 @@ $cart = getSession('cart');
 
                 <div class="cart-footer">
                     <div class="cart-note">
-                        <label for="note">Ghi chú đơn hàng</label>
-                        <textarea id="note" rows="3" placeholder="Nhập ghi chú..."></textarea>
                         <a href="#" class="continue-shopping">← Tiếp tục mua hàng</a>
                     </div>
 

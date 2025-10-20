@@ -268,48 +268,81 @@ DELIMITER ;
 
 -- + Phần hóa đơn
 
-create table HoaDon
-(
-	ID varchar(10),
-	tenHoaDon varchar(100) not null,
-	nguoiDungId varchar(100) not null,
-	diaChiGiaoHangId varchar(10) not null,
-	trangThaiHoaDonId varchar(10),
-	ngayDatHang datetime not null,
-	ngayGiaoHang datetime null,
-	tongTien float not null,
-    
-	constraint PK_HoaDon primary key(ID)
-    -- constraint CHK_ngayDatHangVaGiaoHang check(ngayDatHang <= ngayGiaoHang) -- bỏ vì MySQL ko thực thi
+CREATE TABLE HoaDon (
+    ID VARCHAR(10) PRIMARY KEY,
+    tenHoaDon VARCHAR(100) NOT NULL,
+    nguoiDungId VARCHAR(100) NOT NULL,
+	tenNguoiNhan varchar(100),
+	soDTNhanHang varchar(15),
+    diachi VARCHAR(500) NOT NULL,
+	ghichu varchar(500),
+    trangThaiHoaDonId VARCHAR(10),
+    ngayDatHang DATETIME not null,
+    ngayGiaoHang DATETIME NULL,
+    tongTien FLOAT DEFAULT 0, -- tổng cộng tất cả thành tiền
+
+    -- constraint CHK_ngayDatHangVaGiaoHang CHECK (ngayDatHang <= ngayGiaoHang) -- MySQL không thực thi CHECK nên bỏ
+    CONSTRAINT FK_HoaDon_NguoiDung FOREIGN KEY (nguoiDungId) REFERENCES NguoiDung(ID),
+    CONSTRAINT FK_HoaDon_TrangThai FOREIGN KEY (trangThaiHoaDonId) REFERENCES TrangThaiHoaDon(ID)
 );
 
-DELIMITER //
+CREATE TABLE HoaDonChiTiet (
+    hoaDonId VARCHAR(10),
+    ISBN VARCHAR(100),
+    soLuongSach INT NOT NULL,
+    donGia FLOAT NOT NULL,
+    thanhTien FLOAT, -- tự tính
 
-CREATE TRIGGER trg_HoaDon_CheckDates
-BEFORE INSERT ON HoaDon
+    PRIMARY KEY (hoaDonId, ISBN),
+    CONSTRAINT FK_HoaDonChiTiet_HoaDon FOREIGN KEY (hoaDonId) REFERENCES HoaDon(ID),
+    CONSTRAINT FK_HoaDonChiTiet_Sach FOREIGN KEY (ISBN) REFERENCES Sach(ISBN)
+);
+DELIMITER $$
+
+-- Khi thêm chi tiết
+CREATE TRIGGER trg_them_chitiet
+AFTER INSERT ON HoaDonChiTiet
 FOR EACH ROW
 BEGIN
-    IF NEW.ngayGiaoHang IS NOT NULL 
-       AND NEW.ngayDatHang > NEW.ngayGiaoHang THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'ngayDatHang must be <= ngayGiaoHang';
-    END IF;
-END//
+    UPDATE HoaDon
+    SET tongTien = (
+        SELECT SUM(thanhTien)
+        FROM HoaDonChiTiet
+        WHERE hoaDonId = NEW.hoaDonId
+    )
+    WHERE ID = NEW.hoaDonId;
+END$$
+
+-- Khi cập nhật chi tiết
+CREATE TRIGGER trg_sua_chitiet
+AFTER UPDATE ON HoaDonChiTiet
+FOR EACH ROW
+BEGIN
+    UPDATE HoaDon
+    SET tongTien = (
+        SELECT SUM(thanhTien)
+        FROM HoaDonChiTiet
+        WHERE hoaDonId = NEW.hoaDonId
+    )
+    WHERE ID = NEW.hoaDonId;
+END$$
+
+-- Khi xóa chi tiết
+CREATE TRIGGER trg_xoa_chitiet
+AFTER DELETE ON HoaDonChiTiet
+FOR EACH ROW
+BEGIN
+    UPDATE HoaDon
+    SET tongTien = (
+        SELECT IFNULL(SUM(thanhTien), 0)
+        FROM HoaDonChiTiet
+        WHERE hoaDonId = OLD.hoaDonId
+    )
+    WHERE ID = OLD.hoaDonId;
+END$$
 
 DELIMITER ;
 
-
-
-create table HoaDonChiTiet
-(
-	hoaDonId varchar(10),
-	ISBN varchar(100),
-	soLuongSach int not null,
-	donGia float not null,
-	--thanhTien float not null,
-	
-	constraint PK_HoaDonChiTiet primary key(hoaDonId, ISBN)
- )
 
  create table TrangThaiHoaDon
  (
@@ -322,50 +355,6 @@ create table HoaDonChiTiet
  )
 
 -- +/ Phần hóa đơn -> trigger
-
-DDELIMITER //
-
-CREATE TRIGGER trg_UpdateTongTien
-AFTER INSERT ON HoaDonChiTiet
-FOR EACH ROW
-BEGIN
-    UPDATE HoaDon
-    SET tongTien = (
-        SELECT SUM(soLuong * donGia)
-        FROM HoaDonChiTiet
-        WHERE hoaDonId = NEW.hoaDonId
-    )
-    WHERE ID = NEW.hoaDonId;
-END//
-
-CREATE TRIGGER trg_UpdateTongTien_Update
-AFTER UPDATE ON HoaDonChiTiet
-FOR EACH ROW
-BEGIN
-    UPDATE HoaDon
-    SET tongTien = (
-        SELECT SUM(soLuong * donGia)
-        FROM HoaDonChiTiet
-        WHERE hoaDonId = NEW.hoaDonId
-    )
-    WHERE ID = NEW.hoaDonId;
-END//
-
-CREATE TRIGGER trg_UpdateTongTien_Delete
-AFTER DELETE ON HoaDonChiTiet
-FOR EACH ROW
-BEGIN
-    UPDATE HoaDon
-    SET tongTien = (
-        SELECT SUM(soLuong * donGia)
-        FROM HoaDonChiTiet
-        WHERE hoaDonId = OLD.hoaDonId
-    )
-    WHERE ID = OLD.hoaDonId;
-END//
-
-DELIMITER ;
-
 
 
 -------------------------------------------------------------------------------------------------

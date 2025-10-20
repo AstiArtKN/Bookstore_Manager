@@ -14,6 +14,97 @@ if(empty($cart)){
     redirect("?module=errors&action=404");
 }
 
+if(isPost()){
+    $filter = filterData();
+    $errors = [];
+    // print_r($filter);
+     //validate email phoneNumber
+     if(empty($filter['phone'])){
+        $errors['phone']['require'] = 'vui lòng nhập số điện thoại của bạn';
+    }
+    else{
+        if(!isPhone($filter['phone'])){
+            $errors['phone']['isPhone'] = 'số điện thoại không đúng định dạng';
+        }
+    }
+    if(empty($filter['address'])){
+        $errors['address']['require'] = 'vui lòng nhập địa chỉ cụ thể';
+    }
+    if(empty($filter['fullname'])){
+        $errors['fullname']['require'] = 'vui lòng nhập tên người nhận hàng';
+    }
+    if(empty($errors)){
+        ///tạo ID hoadon tự động
+        $idrand = generateRandomID(10);
+
+        //
+        $tinhId = $_POST['tinh'] ?? 0;
+        $huyenId = $_POST['huyen'] ?? 0;
+        $xaId = $_POST['xa'] ?? 0;
+
+        // Lấy tên tương ứng
+        $tinh = getOne("SELECT tenTinhThanhPho FROM tinhthanhpho WHERE ID = '$tinhId'");
+        $huyen = getOne("SELECT tenQuanHuyen FROM quanhuyen WHERE ID = '$huyenId'");
+        $xa = getOne("SELECT tenXaPhuong FROM xaphuong WHERE ID = '$xaId'");
+
+        $string_checkout = $filter['address'] . ', ' .
+                         ($tinh['tenTinhThanhPho'] ?? '') . ', ' .
+                         ($huyen['tenQuanHuyen'] ?? '') . ', ' .
+                        ($xa['tenXaPhuong'] ?? '');
+
+        
+        $data_hoadon = [
+            'ID' => $idrand,
+            'nguoiDungId' => $user_detail['ID'],
+            'tenNguoiNhan' => $filter['fullname'],
+            'soDTNhanHang' => $filter['phone'],
+            'diachi' => $string_checkout,
+            'ghichu' => $filter['ghichu'],
+            'trangThaiHoaDonId' => 'TTDH1',
+            'ngayDatHang' => date('Y:m:d H:i:s')
+        ];
+        $insertStatus = insert('hoadon', $data_hoadon);
+
+        //thêm dữ liệu vào bảng chitiethoadon
+        foreach($cart as $isbn => $item){
+            $thanhTien = $item['gia'] * $item['quantity'];
+            $data_chitietHD = [
+                'hoaDonId' => $idrand,
+                'ISBN' => $isbn,
+                'soLuongSach' => $item['quantity'],
+                'dongia' => $item['gia'],
+                'thanhtien' => $thanhTien
+            ];
+            $insertStatus = insert('hoadonchitiet',  $data_chitietHD);
+            $get_one_book = getOne("SELECT soLuong from sach where ISBN = '$isbn'");
+            $soluong_final = max(0, $get_one_book['soLuong'] - $item['quantity']);
+            $dataUpdate = [
+                    'soLuong' => $soluong_final,
+                    'update_at' => date('Y:m:d H:i:s')
+                ];
+
+            $condition = "ISBN='" . $isbn . "'";
+
+            $updateStatus = update('sach', $dataUpdate, $condition);
+        }
+
+         removeSession('cart');
+        
+
+    }
+    else{
+        setSessionFlash('msg', 'vui lòng kiểm tra dữ liệu nhập vào.');
+        setSessionFlash('msg_type', 'danger');
+        // setSessionFlash('oldData', $filter);
+        setSessionFlash('errors', $errors);
+    }
+
+
+}
+
+$msg = getSessionFlash('msg');
+$msg_type = getSessionFlash('msg_type');
+$errorArr = getSessionFlash('errors');
 
 ?>
 
@@ -22,7 +113,8 @@ if(empty($cart)){
 <main>
     <div class="checkout" style="background-color: #f6f6f6;">
         <div class="container">
-            <form id="checkout-form" class="form-checkout-detail">
+
+            <form id="checkout-form" class="form-checkout-detail" action="" method="POST" enctype="multipart/form-data">
                 <div class="checkout-container">
                     <div class="checkout-left">
                         <!-- Tài khoản -->
@@ -46,6 +138,12 @@ if(empty($cart)){
                         <!-- Thông tin giao hàng -->
                         <div class="card">
                             <h3>Thông tin giao hàng</h3>
+                            <?php 
+                                if(!empty($msg) && !empty($msg_type)){
+                                    getMsg($msg, $msg_type); 
+                                }
+                                                    
+                                ?>
                             <div class="shipping-method">
                                 <!-- <button class="active">Giao tận nơi</button>
                             <button>Nhận tại cửa hàng</button> -->
@@ -55,12 +153,21 @@ if(empty($cart)){
                             <div class="form-checkout-detail-inner">
                                 <div>
                                     <label>Họ và tên</label>
-                                    <input type="text" name="fullname" value="Võ Điền">
-
+                                    <input type="text" name="fullname">
+                                    <?php 
+                                    if(!empty($errorArr)){
+                                     echo formError($errorArr, 'fullname');
+                                    }
+                                    ?>
                                 </div>
                                 <div>
                                     <label>Số điện thoại</label>
                                     <input type="text" name="phone" placeholder="Nhập số điện thoại">
+                                    <?php 
+                                    if(!empty($errorArr)){
+                                     echo formError($errorArr, 'phone');
+                                    }
+                                    ?>
                                 </div>
 
                                 <div>
@@ -69,8 +176,13 @@ if(empty($cart)){
                                 </div>
 
                                 <div>
-                                    <label>Địa chỉ</label>
+                                    <label>Địa chỉ cụ thể</label>
                                     <input type="text" name="address" placeholder="Số nhà, tên đường">
+                                    <?php 
+                                    if(!empty($errorArr)){
+                                     echo formError($errorArr, 'address');
+                                    }
+                                    ?>
                                 </div>
 
                                 <div>
@@ -95,6 +207,12 @@ if(empty($cart)){
                                         <option value="">-- Chọn xã --</option>
                                     </select>
 
+                                </div>
+
+                                <div>
+                                    <label>Ghi chú:</label>
+                                    <textarea id="ghichu" name="ghichu" rows="3" cols="50" class="check-out-ghichu"
+                                        placeholder="ghi chú đơn hàng..."></textarea>
                                 </div>
 
                             </div>

@@ -1502,6 +1502,17 @@ a {
   color: #fff;
   border-radius: 0;
 }
+.check-out-ghichu {
+  margin-top: 5px;
+  width: 100%;
+}
+.erro,
+.annouce-message {
+  margin-top: 7px;
+  color: #c40202;
+  font-weight: 500;
+  font-size: 1.6rem;
+}
 
 @media (max-width: 768px) {
   .checkout-container {
