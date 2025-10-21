@@ -658,3 +658,9 @@ button:hover {
 #slug {
   background: #efefef;
 }
+.xacnhan-group {
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  column-gap: 40px;
+}

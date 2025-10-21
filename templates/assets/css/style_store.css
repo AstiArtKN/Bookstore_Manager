@@ -1022,8 +1022,9 @@ a {
 .quantity-box {
   display: flex;
   align-items: center;
+
   overflow: hidden;
-  column-gap: 1px;
+  column-gap: 3px;
 }
 .qty-btn,
 .qty-input {

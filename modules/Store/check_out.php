@@ -278,7 +278,15 @@ $errorArr = getSessionFlash('errors');
                                     <span>Tổng thanh toán</span>
                                     <span><?= number_format($tongTien, 0, ',', '.'); ?> ₫</span>
                                 </div>
+                                <?php if(empty($user_detail)): ?>
+                                <a href="?module=auth&action=login" class="logout"
+                                    style="display: inline-block;padding: 10px;margin-top: 10px;font-weight: 600; font-size: 1.8rem; border: solid 1px #ccc">Đăng
+                                    nhập để
+                                    thanh toán</a>
+                                <?php else: ?>
                                 <button type="submit" class="btn-checkout-thanhtoan">Đặt hàng</button>
+                                <?php endif;?>
+
                             </div>
                         </div>
                     </div>
