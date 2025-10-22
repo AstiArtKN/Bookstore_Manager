@@ -1,5 +1,6 @@
 <?php
-if(!defined('_KTHopLe')) {
+if(!defined('_KTHopLe'))
+{
     die('Truy cập không hợp lệ');
 }
 
@@ -10,11 +11,17 @@ $data = [
 layout('sidebar', $data);
 layout('header',  $data);
 
+//?module=users&action=list&slt_quyenhan=&search__user=&page=1
+//phân trang trước ... 3,4,5,...sau
+//1,2,3...sau -> trước 1, [2], 3,...sau
+//perpage, maxpage, (offset)vị trí lấy dữu liệu và đỗ dữ liệu từ đâu
+
+
+
 $filter = filterData();
 $chuoiWhere = '';
 $slt_TrangThaiDH = 'TTDH1';
 $search__user = '';
-$filterTime = 'all'; // lọc thời gian
 
 if(isGet()){
     if(isset($filter['search__user'])){
@@ -23,71 +30,80 @@ if(isGet()){
     if(isset($filter['slt_TrangThaiDH'])){
         $slt_TrangThaiDH  = $filter['slt_TrangThaiDH'];
     }
-    if(isset($filter['filter_time'])){
-        $filterTime = $filter['filter_time'];
-    }
-
-    // tìm kiếm tên hoặc địa chỉ
     if(!empty($search__user)){
-        $chuoiWhere .= (strpos($chuoiWhere, 'WHERE') === false) ? ' WHERE ' : ' AND ';
+        if(strpos($chuoiWhere, 'WHERE') == false){
+            $chuoiWhere .= ' WHERE ';
+        }
+        else{
+            $chuoiWhere .= ' AND ';
+        }
+
         $chuoiWhere .= " (hoadon.tenNguoiNhan LIKE '%$search__user%' OR hoadon.diachi LIKE '%$search__user%') ";
     }
 
-    // lọc trạng thái
     if(!empty($slt_TrangThaiDH)){
-        $chuoiWhere .= (strpos($chuoiWhere, 'WHERE') === false) ? ' WHERE ' : ' AND ';
-        $chuoiWhere .= " hoadon.trangThaiHoaDonId = '$slt_TrangThaiDH' ";
-    }
-
-    // lọc theo thời gian
-    if($filterTime != 'all'){
-        $chuoiWhere .= (strpos($chuoiWhere, 'WHERE') === false) ? ' WHERE ' : ' AND ';
-        switch($filterTime){
-            case 'today':
-                $chuoiWhere .= " DATE(hoadon.ngayDatHang) = CURDATE() ";
-                break;
-            case 'month':
-                $chuoiWhere .= " MONTH(hoadon.ngayDatHang) = MONTH(CURDATE()) AND YEAR(hoadon.ngayDatHang) = YEAR(CURDATE()) ";
-                break;
-            case 'year':
-                $chuoiWhere .= " YEAR(hoadon.ngayDatHang) = YEAR(CURDATE()) ";
-                break;
+        if(strpos($chuoiWhere, 'WHERE') == false){
+            $chuoiWhere .= ' WHERE ';
         }
+        else{
+            $chuoiWhere .= ' AND ';
+        }
+
+         $chuoiWhere .= " hoadon.trangThaiHoaDonId = '$slt_TrangThaiDH' ";
     }
 }
 
-// xử lý phân trang
-$maxData = getRows("SELECT ID FROM hoadon");
-$perPage = 3;
-$maxPage = ceil($maxData / $perPage);
-$page = isset($filter['page']) ? $filter['page'] : 1;
-if($page > $maxPage || $page < 1) $page = 1;
-$offset = ($page - 1) * $perPage;
 
-// lấy danh sách hóa đơn
+//xử lý trang
+$maxData = getRows("SELECT ID FROM hoadon");
+$perPage = 3;//so dong du lieu
+$maxPage = ceil($maxData/$perPage);
+$offset = 0;
+$page = 1;
+//getpage
+if(isset($filter['page'])){
+    $page = $filter['page'];
+}
+
+if($page > $maxPage || $page < 1){
+    $page = 1;
+}
+
+if(isset($page)){
+    $offset = ($page - 1) * $perPage;
+}
+
+
+// echo $chuoiWhere;
+
 $get_HD = getAll("SELECT hoadon.ID, nguoidung.tenNguoiDung, hoadon.tenNguoiNhan,
-hoadon.soDTNhanHang, hoadon.diachi, trangthaihoadon.tenTrangThai, hoadon.trangThaiHoaDonId, 
-hoadon.ngayDatHang, hoadon.ngayGiaoHang, hoadon.tongTien
+hoadon.soDTNhanHang, hoadon.diachi, trangthaihoadon.tenTrangThai, hoadon.trangThaiHoaDonId, hoadon.ngayDatHang, hoadon.ngayGiaoHang, hoadon.tongTien
 FROM hoadon
 INNER JOIN `trangthaihoadon` ON hoadon.trangThaiHoaDonId  = trangthaihoadon.ID
 INNER JOIN `nguoidung` ON hoadon.nguoiDungId  = nguoidung.ID
 $chuoiWhere
-LIMIT $offset, $perPage");
+LIMIT $offset, $perPage
+");
 
-// option trạng thái
+// option html
 $GetTrangthaiHoaDon = getAll("SELECT * FROM trangthaihoadon");
-
+//xử lý query
+// $_SERVER['QUERY_STRING']; -> module=users&action=list&search__user=max&page=2
 if(!empty($_SERVER['QUERY_STRING'])){
     $queryString = $_SERVER['QUERY_STRING'];
     $queryString = str_replace('&page='.$page,'',$queryString);
 }
 
-if(!empty($slt_TrangThaiDH) || !empty($search__user) || $filterTime != 'all'){
-    $maxData2 = getRows("SELECT ID FROM hoadon $chuoiWhere");
-    $maxPage = ceil($maxData2 / $perPage);
+// print_r($getDetailUser);
+
+if(!empty($slt_TrangThaiDH) || !empty($search__user)){
+    $maxData2 = getRows("SELECT ID FROM hoadon 
+     $chuoiWhere");
+    $maxPage = ceil($maxData2/$perPage);
 }
 $msg = getSessionFlash('msg');
 $msg_type = getSessionFlash('msg_type');
+
 ?>
 
 <!-- book editor -->
@@ -98,7 +114,9 @@ $msg_type = getSessionFlash('msg_type');
             if(!empty($msg) && !empty($msg_type)){
                 getMsg($msg, $msg_type); 
             }
+                                
         ?>
+
     </div>
     <div class="book-editor__tool">
         <form method="GET" action="">
@@ -109,42 +127,33 @@ $msg_type = getSessionFlash('msg_type');
                     <label for="slt_TrangThaiDH">Trạng Thái: </label>
                     <select id="slt_TrangThaiDH" name="slt_TrangThaiDH">
                         <option value="">-chọn-</option>
-                        <?php foreach($GetTrangthaiHoaDon as $item): ?>
+                        <?php 
+                            foreach($GetTrangthaiHoaDon as $item):
+                        ?>
                         <option value="<?php echo $item['ID'];?>"
-                            <?php echo ($slt_TrangThaiDH == $item['ID']) ? 'selected' : ''; ?>>
-                            <?php echo $item['tenTrangThai'];?>
-                        </option>
+                            <?php echo ($slt_TrangThaiDH == $item['ID']) ? 'selected' : false; ?>>
+                            <?php echo $item['tenTrangThai'];?></option>
+
                         <?php endforeach;?>
                     </select>
                 </div>
-
-                <!-- Bộ lọc thời gian -->
-                <div class="show-entries" style="margin-left: 20px;">
-                    <label for="filter_time">Thời gian: </label>
-                    <select id="filter_time" name="filter_time" onchange="this.form.submit()">
-                        <option value="all" <?php echo ($filterTime == 'all') ? 'selected' : ''; ?>>Tất cả</option>
-                        <option value="today" <?php echo ($filterTime == 'today') ? 'selected' : ''; ?>>Hôm nay</option>
-                        <option value="month" <?php echo ($filterTime == 'month') ? 'selected' : ''; ?>>Tháng này
-                        </option>
-                        <option value="year" <?php echo ($filterTime == 'year') ? 'selected' : ''; ?>>Năm nay</option>
-                    </select>
-                </div>
-
                 <div class="form-wrapper">
                     <div class="form-inside__container">
                         <div class="book-editor__search">
                             <input type="search" id="search__user" name="search__user" class="textarea-timsach"
-                                value="<?php echo (!empty($search__user)) ? $search__user : ''; ?>" />
+                                value="<?php echo (!empty($search__user)) ? $search__user : false; ?>" />
                         </div>
                         <div class="book-editor__btn">
-                            <button type="submit" value="search" class="btn btn-timsach">Tìm kiếm</button>
+                            <button type="submit" value="search" class="btn btn-timsach">
+                                Tìm kiếm
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
+        <!-- <span>Mục</span> -->
     </div>
-
     <!-- ---- Table ----- -->
     <div class="book-editor__table-wrapper">
         <table id="tableHoaDon" class="dashboard__table dashboard__table-mid book-editor_table">
@@ -158,21 +167,25 @@ $msg_type = getSessionFlash('msg_type');
                     <th>Địa Chỉ</th>
                     <th>Trạng Thái</th>
                     <th>Ngày Đặt</th>
+
                     <th>Tổng Tiền</th>
                     <th>Xem chi tiết</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($get_HD as $key => $item): ?>
+                <?php 
+                    foreach($get_HD as $key => $item ):
+                ?>
                 <tr>
-                    <td><?php echo $key + 1; ?></td>
+                    <td><?php echo $key+1; ?></td>
                     <td><?php echo $item['ID']; ?></td>
-                    <td><?php echo $item['tenNguoiDung']; ?></td>
+                    <td class="tensach"><?php echo $item['tenNguoiDung']; ?></td>
                     <td><?php echo $item['tenNguoiNhan']; ?></td>
                     <td><?php echo $item['soDTNhanHang']; ?></td>
-                    <td><?php echo $item['diachi']; ?></td>
-                    <td><?php echo $item['tenTrangThai']; ?></td>
+                    <td class="mota"><?php echo $item['diachi']; ?></td>
+                    <td class="email"><?php echo $item['tenTrangThai']; ?></td>
                     <td><?php echo $item['ngayDatHang']; ?></td>
+
                     <td><?php echo $item['tongTien']; ?></td>
                     <td>
                         <a href="?module=receipt&action=detail&id=<?php echo $item['ID'];?>&tongTien=<?php echo $item['tongTien'];?>"
@@ -181,35 +194,68 @@ $msg_type = getSessionFlash('msg_type');
                         </a>
                     </td>
                 </tr>
+
                 <?php endforeach;?>
             </tbody>
         </table>
     </div>
-
-    <!-- Phân trang -->
     <nav aria-label="Page navigation example" class="navpage">
         <ul class="pagination">
-            <?php if($page > 1): ?>
+            <!-- xử lý nứt 'trước' -->
+            <?php 
+                if($page > 1):
+             ?>
             <li class="page-item"><a class="page-link"
-                    href="?<?php echo $queryString;?>&page=<?php echo $page-1;?>">Trước</a></li>
+                    href="?<?php echo $queryString;?>&page=<?php echo $page-1;?>">Trước</a>
+            </li>
             <?php endif; ?>
+            <!-- dấu ... trước -->
+            <!-- tính vị trí bắt đầu -->
+            <?php $start = $page - 1;
+                if($start < 1){
+                    $start = 1;
+                }
+             ?>
+            <?php 
+                if($start > 1):
+             ?>
+            <li class="page-item"><a class="page-link"
+                    href="?<?php echo $queryString;?>&page=<?php echo $page-1;?>">...</a>
+            </li>
+            <?php endif; 
+                $end = $page + 1;
+                if($end > $maxPage){
+                    $end = $maxPage;
+                }
+            ?>
+
+            <!-- xử lý số trang -->
+            <?php for($i = $start ; $i <= $end; $i++): ?>
+            <li class="page-item"><a class="page-link <?php echo ($page == $i)? 'active' : false; ?>"
+                    href="?<?php echo $queryString;?>&page=<?php echo $i;?>"><?php echo $i; ?></a></li>
+
+            <!-- dấu ... sau -->
+            <!-- tính vị trí bắt đầu -->
 
             <?php 
-                $start = max(1, $page - 1);
-                $end = min($maxPage, $page + 1);
-            ?>
-            <?php for($i = $start ; $i <= $end; $i++): ?>
-            <li class="page-item"><a class="page-link <?php echo ($page == $i)? 'active' : ''; ?>"
-                    href="?<?php echo $queryString;?>&page=<?php echo $i;?>"><?php echo $i; ?></a></li>
-            <?php endfor; ?>
+                endfor;
+                if($end < $maxPage):
+             ?>
+            <li class=" page-item"><a class="page-link"
+                    href="?<?php echo $queryString;?>&page=<?php echo $page+1;?>">...</a>
+            </li>
+            <?php endif; ?>
 
-            <?php if($page < $maxPage): ?>
+            <!-- xử lý nứt 'sau' -->
+            <?php 
+                if($page < $maxPage):
+             ?>
             <li class="page-item"><a class="page-link"
-                    href="?<?php echo $queryString;?>&page=<?php echo $page+1;?>">Sau</a></li>
+                    href="?<?php echo $queryString;?>&page=<?php echo $page+1;?>">Sau</a>
+            </li>
             <?php endif; ?>
         </ul>
     </nav>
-
     <button onclick="exportTableToExcel()">Xuất Excel</button>
 </div>
 </div>
@@ -224,5 +270,7 @@ function exportTableToExcel() {
     XLSX.writeFile(workbook, "DanhSachHoaDon.xlsx");
 }
 </script>
+<?php 
 
-<?php layout('footer'); ?>
+layout('footer');
+?>
