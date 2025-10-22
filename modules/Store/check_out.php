@@ -48,9 +48,9 @@ if(isPost()){
         $xa = getOne("SELECT tenXaPhuong FROM xaphuong WHERE ID = '$xaId'");
 
         $string_checkout = $filter['address'] . ', ' .
-                         ($tinh['tenTinhThanhPho'] ?? '') . ', ' .
+                         ($xa['tenXaPhuong'] ?? ''). ', ' .
                          ($huyen['tenQuanHuyen'] ?? '') . ', ' .
-                        ($xa['tenXaPhuong'] ?? '');
+                        ($tinh['tenTinhThanhPho'] ?? '');
 
         
         $data_hoadon = [
@@ -89,6 +89,7 @@ if(isPost()){
         }
 
          removeSession('cart');
+         redirect('?module=store&action=thank_you&id=' . $idrand);
         
 
     }
