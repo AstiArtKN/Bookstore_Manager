@@ -27,7 +27,7 @@ INNER JOIN nhaxuatban ON sach.nhaXuatBanId = nhaxuatban.ID
 WHERE theloaisach.ID = 'TL1'
 LIMIT 5
 ");
-$getAllNewBook = '';
+$getAllNewBook = '';//desc create_at
 
 
 
