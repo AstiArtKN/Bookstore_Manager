@@ -16,6 +16,12 @@ layout('header',  $data);
 //1,2,3...sau -> trước 1, [2], 3,...sau
 //perpage, maxpage, (offset)vị trí lấy dữu liệu và đỗ dữ liệu từ đâu
 
+$user_detail = getCurrentUserFromToken();
+
+// Nếu không phải QTV thì cút ra store
+if ($user_detail['quyenHanId'] !== 'QTV') {
+    redirect('?module=store&action=index');
+}
 
 
 $filter = filterData();

@@ -10,6 +10,13 @@ $data = [
 layout('sidebar', $data);
 layout('header',  $data);
 
+$user_detail = getCurrentUserFromToken();
+
+// Nếu không phải QTV thì cút ra store
+if ($user_detail['quyenHanId'] !== 'QTV') {
+    redirect('?module=store&action=index');
+}
+
 if(isPost()){
     $filter = filterData();
     $errors = [];

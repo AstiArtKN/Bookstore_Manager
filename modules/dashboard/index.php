@@ -12,6 +12,65 @@ $data = [
 
 layout('sidebar', $data);
 layout('header', $data);
+
+/*SELECT 
+    s.ID,
+    s.tenSach,
+    s.tacGia,
+    s.hinhAnh,
+    SUM(ct.soLuong) AS tongSoLuongBan
+FROM chitiethoadon AS ct
+JOIN hoadon AS hd ON ct.hoaDonId = hd.ID
+JOIN sach AS s ON ct.sachId = s.ID
+WHERE MONTH(hd.ngayDatHang) = MONTH(CURDATE())
+  AND YEAR(hd.ngayDatHang) = YEAR(CURDATE())
+GROUP BY s.ID, s.tenSach, s.tacGia, s.hinhAnh
+ORDER BY tongSoLuongBan DESC
+LIMIT 5;*/
+
+
+/*
+SELECT 
+    s.ID,
+    s.tenSach,
+    s.tacGia,
+    s.hinhAnh,
+    SUM(ct.soLuong) AS tongSoLuongBan
+FROM chitiethoadon AS ct
+JOIN hoadon AS hd ON ct.hoaDonId = hd.ID
+JOIN sach AS s ON ct.sachId = s.ID
+WHERE YEARWEEK(hd.ngayDatHang, 1) = YEARWEEK(CURDATE(), 1)
+GROUP BY s.ID, s.tenSach, s.tacGia, s.hinhAnh
+ORDER BY tongSoLuongBan DESC
+LIMIT 5;
+
+
+
+$topMonth = getAll("
+    SELECT s.ID, s.tenSach, s.tacGia, s.hinhAnh, SUM(ct.soLuong) AS tongSoLuongBan
+    FROM chitiethoadon AS ct
+    JOIN hoadon AS hd ON ct.hoaDonId = hd.ID
+    JOIN sach AS s ON ct.sachId = s.ID
+    WHERE MONTH(hd.ngayDatHang) = MONTH(CURDATE())
+      AND YEAR(hd.ngayDatHang) = YEAR(CURDATE())
+    GROUP BY s.ID, s.tenSach, s.tacGia, s.hinhAnh
+    ORDER BY tongSoLuongBan DESC
+    LIMIT 5
+");
+
+$topWeek = getAll("
+    SELECT s.ID, s.tenSach, s.tacGia, s.hinhAnh, SUM(ct.soLuong) AS tongSoLuongBan
+    FROM chitiethoadon AS ct
+    JOIN hoadon AS hd ON ct.hoaDonId = hd.ID
+    JOIN sach AS s ON ct.sachId = s.ID
+    WHERE YEARWEEK(hd.ngayDatHang, 1) = YEARWEEK(CURDATE(), 1)
+    GROUP BY s.ID, s.tenSach, s.tacGia, s.hinhAnh
+    ORDER BY tongSoLuongBan DESC
+    LIMIT 5
+");
+*/ 
+
+
 ?>
 
 

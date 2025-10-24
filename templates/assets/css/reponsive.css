@@ -262,7 +262,7 @@
     max-width: 100%;
   }
   .team__list {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     row-gap: 10px;
   }
   /* rate */
@@ -330,10 +330,21 @@
   .community__desc {
     font-size: 1.6rem;
   }
-
+  /*======================== feature inner ================ */
+  .feature__inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
   /*======================== book cart ================ */
   .cart-footer {
     flex-direction: column;
+  }
+  /*======================== check out ================ */
+  .checkout-container {
+    flex-direction: column;
+  }
+  .checkout-left,
+  .checkout-right {
+    width: 95%;
   }
 }
 /* hidden */

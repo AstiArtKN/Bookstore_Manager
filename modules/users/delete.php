@@ -4,6 +4,8 @@ if(!defined('_KTHopLe'))
     die('Truy cập không hợp lệ');
 }
 
+
+
 $getData = filterData('get');
 if(!empty($getData['id'])){
     $user_id = $getData['id'];
