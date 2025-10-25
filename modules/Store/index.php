@@ -50,7 +50,7 @@ $msg_type = getSessionFlash('msg_type');
                     <p class="hero__desc">Kho sách và truyện tranh khổng lồ</p>
 
                     <?php if(!empty($user_detail)): ?>
-                    <a href="?module=auth&action=login" class="btn hero__btn">xin chào,
+                    <a href="?module=auth&action=login" class="btn hero__btn line-clamp line-1 break-all ">xin chào,
                         <?php echo $user_detail['tenNguoiDung']; ?></a>
                     <a href="?module=store&action=my_receipt" class="btn hero__btn">lịch sử mua hàng</a>
                     <a href="?module=auth&action=logout" class="btn hero__btn">Đăng xuất</a>
@@ -123,6 +123,7 @@ $msg_type = getSessionFlash('msg_type');
                             </p>
                             <div class="service-detail-item__acction">
                                 <!-- Form thêm vào giỏ hàng -->
+                                <?php if($item['soLuong'] > 0): ?>
                                 <form class="addToCartForm" action="?module=store&action=add_to_cart"
                                     enctype="multipart/form-data" method="post">
                                     <input type="hidden" name="module" value="store">
@@ -146,6 +147,11 @@ $msg_type = getSessionFlash('msg_type');
                                         </div>
                                     </div>
                                 </form>
+                                <?php else: ?>
+                                <p class="btn hero__btn" style="border-radius: 4px; background: #ccc; width: 100%">
+                                    Hết hàng
+                                </p>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </article>
@@ -189,6 +195,7 @@ $msg_type = getSessionFlash('msg_type');
                         </p>
                         <div class="service-detail-item__acction">
                             <!-- Form thêm vào giỏ hàng -->
+                            <?php if($item['soLuong'] > 0): ?>
                             <form class="addToCartForm" action="?module=store&action=add_to_cart"
                                 enctype="multipart/form-data" method="post">
                                 <input type="hidden" name="module" value="store">
@@ -212,7 +219,12 @@ $msg_type = getSessionFlash('msg_type');
                                     </div>
                                 </div>
                             </form>
-
+                            <?php else: ?>
+                            <p class="btn hero__btn"
+                                style="border-radius: 4px; background: #ccc; width: 100%; margin-top: 20px">
+                                Hết hàng
+                            </p>
+                            <?php endif; ?>
                         </div>
                     </article>
                     <?php endforeach; ?>
@@ -258,6 +270,7 @@ $msg_type = getSessionFlash('msg_type');
                     </p>
                     <div class="service-detail-item__acction feature-item__action">
                         <!-- Form thêm vào giỏ hàng -->
+                        <?php if($item['soLuong'] > 0): ?>
                         <form class="addToCartForm" action="?module=store&action=add_to_cart"
                             enctype="multipart/form-data" method="post">
                             <input type="hidden" name="module" value="store">
@@ -280,6 +293,11 @@ $msg_type = getSessionFlash('msg_type');
                                 </div>
                             </div>
                         </form>
+                        <?php else: ?>
+                        <p class="btn hero__btn" style="border-radius: 4px; background: #ccc; width: 100%">
+                            Hết hàng
+                        </p>
+                        <?php endif; ?>
                     </div>
                 </article>
                 <?php endforeach;?>
@@ -339,6 +357,7 @@ $msg_type = getSessionFlash('msg_type');
                         Giá: <span><?php echo $item['gia']; ?></span>
                     </p>
                     <div class="service-detail-item__acction feature-item__action">
+                        <?php if($item['soLuong'] > 0): ?>
                         <!-- Form thêm vào giỏ hàng -->
                         <form class="addToCartForm" action="?module=store&action=add_to_cart"
                             enctype="multipart/form-data" method="post">
@@ -362,6 +381,11 @@ $msg_type = getSessionFlash('msg_type');
                                 </div>
                             </div>
                         </form>
+                        <?php else: ?>
+                        <p class="btn hero__btn" style="border-radius: 4px; background: #ccc; width: 100%">
+                            Hết hàng
+                        </p>
+                        <?php endif; ?>
                     </div>
                 </article>
                 <?php endforeach;?>
@@ -394,11 +418,12 @@ $msg_type = getSessionFlash('msg_type');
                     <h3 class="team-item__name line-2 line-clamp">
                         <?php echo $item['tenSach']; ?>
                     </h3>
-                    <p class="service-detail-item__desc line-clamp line-2">
+                    <p class="service-detail-item__desc line-clamp line-2" style="text-align: center;">
                         Giá: <span><?php echo $item['gia']; ?></span>
                     </p>
                     <div class="service-detail-item__acction newbooks-wrapper">
                         <!-- Form thêm vào giỏ hàng -->
+                        <?php if($item['soLuong'] > 0): ?>
                         <form class="addToCartForm" action="?module=store&action=add_to_cart"
                             enctype="multipart/form-data" method="post">
                             <input type="hidden" name="module" value="store">
@@ -421,6 +446,12 @@ $msg_type = getSessionFlash('msg_type');
                                 </div>
                             </div>
                         </form>
+                        <?php else: ?>
+                        <p class="btn hero__btn"
+                            style="border-radius: 4px; background: #ccc; width: 100%; margin-top: 30px">
+                            Hết hàng
+                        </p>
+                        <?php endif; ?>
                     </div>
                 </article>
                 <?php endforeach;?>

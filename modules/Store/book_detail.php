@@ -37,7 +37,7 @@ if(!empty($getData)){
                         <img src="<?php echo $getThisBook['hinhAnh'];?>" alt="" class="book-detail__img" />
                     </div>
 
-
+                    <?php if( $getThisBook['soLuong'] > 0): ?>
                     <!-- thêm vào giỏ hàng -->
                     <form class="addToCartForm" action="?module=store&action=add_to_cart" enctype="multipart/form-data"
                         method="post">
@@ -61,7 +61,12 @@ if(!empty($getData)){
                             </div>
                         </div>
                     </form>
-
+                    <?php else: ?>
+                    <p class="btn hero__btn"
+                        style="border-radius: 4px; background: #ccc; width: 100%; margin-top: 30px;">
+                        Hết hàng
+                    </p>
+                    <?php endif; ?>
                 </div>
                 <!-- update -->
                 <!-- right -->

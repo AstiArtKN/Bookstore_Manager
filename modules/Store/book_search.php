@@ -11,7 +11,7 @@ $getNameSearch = $filter['search_book'];
 
 //xử lý trang
 $maxData = getRows("SELECT ISBN FROM sach WHERE tenSach LIKE '%$getNameSearch%'");
-$perPage = 1;//so dong du lieu
+$perPage = 4;//so dong du lieu
 $maxPage = ceil($maxData/$perPage);
 $offset = 0;
 $page = 1;
@@ -90,6 +90,7 @@ if(!empty($getNameSearch)){
                         Giá: <span> <?php  echo number_format($item['gia'],0, ',', '.'); ?> đ</span>
                     </p>
                     <div class="service-detail-item__acction feature-item__action">
+                        <?php if($item['soLuong'] > 0): ?>
                         <form class="addToCartForm" action="?module=store&action=add_to_cart"
                             enctype="multipart/form-data" method="post">
                             <input type="hidden" name="module" value="store">
@@ -121,6 +122,12 @@ if(!empty($getNameSearch)){
                                 Mua ngay
                             </button>
                         </form> -->
+
+                        <?php else: ?>
+                        <p class="btn hero__btn" style="border-radius: 4px; background: #ccc; width: 100%">
+                            Hết hàng
+                        </p>
+                        <?php endif; ?>
                     </div>
                 </article>
                 <?php 

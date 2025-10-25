@@ -113,6 +113,7 @@ if(!empty($slt_cate)){
                     </p>
                     <div class="service-detail-item__acction feature-item__action">
                         <!-- Form thêm vào giỏ hàng -->
+                        <?php if($item['soLuong'] > 0): ?>
                         <form class="addToCartForm" action="?module=store&action=add_to_cart"
                             enctype="multipart/form-data" method="post">
                             <input type="hidden" name="module" value="store">
@@ -135,7 +136,11 @@ if(!empty($slt_cate)){
                                 </div>
                             </div>
                         </form>
-
+                        <?php else: ?>
+                        <p class="btn hero__btn" style="border-radius: 4px; background: #ccc; width: 100%">
+                            Hết hàng
+                        </p>
+                        <?php endif; ?>
                     </div>
                 </article>
                 <?php 
