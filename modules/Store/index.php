@@ -52,6 +52,7 @@ $msg_type = getSessionFlash('msg_type');
                     <?php if(!empty($user_detail)): ?>
                     <a href="?module=auth&action=login" class="btn hero__btn">xin chào,
                         <?php echo $user_detail['tenNguoiDung']; ?></a>
+                    <a href="?module=store&action=my_receipt" class="btn hero__btn">lịch sử mua hàng</a>
                     <a href="?module=auth&action=logout" class="btn hero__btn">Đăng xuất</a>
                     <?php
                         else:
