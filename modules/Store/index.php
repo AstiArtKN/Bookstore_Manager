@@ -64,32 +64,24 @@ $msg_type = getSessionFlash('msg_type');
         </div>
     </div>
     <!-- sline-show -->
-    <section class="slide-show">
-        <div class="container-slider">
-            <div class="slideshow-container">
-                <div class="slide fade">
-                    <img src="assets/images/sl1.png" alt="Slide 1 " class="slide-show__img" />
-                </div>
-                <div class="slide fade">
-                    <img src="assets/images/sl2.png" alt="Slide 2" class="slide-show__img" />
-                </div>
-                <div class="slide fade">
-                    <img src="assets/images/sl3.png" alt="Slide 3" class="slide-show__img" />
+    <div class="slideshow-web">
+        <div class="containeaar">
+            <div class="slideshow">
+                <div class="slides">
+                    <img src="https://theme.hstatic.net/200000287623/1000948667/14/slideshow_2.jpg?v=531" alt="">
+                    <img src="https://theme.hstatic.net/200000287623/1000948667/14/slideshow_3.jpg?v=531" alt="">
+                    <!-- <img src="https://theme.hstatic.net/1000376556/1001014889/14/psl_1_r1_slide_img_1.jpg?v=68" alt="">
+                    <img src="https://theme.hstatic.net/1000376556/1001014889/14/psl_1_r1_slide_img_2.jpg?v=68" alt=""> -->
                 </div>
 
-                <!-- Nút điều hướng -->
-                <a class="prev" onclick="plusSlides(-1)">❮</a>
-                <a class="next" onclick="plusSlides(1)">❯</a>
-            </div>
+                <!-- Nút điều khiển -->
+                <button class="slide-btn slide-left">◀</button>
+                <button class="slide-btn slide-right">▶</button>
 
-            <!-- Dots -->
-            <div class="dots">
-                <span class="dot" onclick="currentSlide(1)"></span>
-                <span class="dot" onclick="currentSlide(2)"></span>
-                <span class="dot" onclick="currentSlide(3)"></span>
+                <div class="dots"></div>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- service -->
     <section class="service">
@@ -232,22 +224,23 @@ $msg_type = getSessionFlash('msg_type');
             </div>
         </div>
         <!-- detail mid -->
-        <div class="service-detail__mid">
-            <div class="container">
-                <div class="service-detail__mid--inner">
-                    <div class="service-detail__mid--content">
-                        <h2 class="detail-mid-heading">Dành cho Fan Manga</h2>
-                        <p class="detail-mid-desc"></p>
-                    </div>
-                    <div class="service-detail__cta">
-                        <a href="?module=store&action=book_cate&id=TL1" class="btn service-detail__mid-btn">Xem Ngay</a>
-                    </div>
+
+        <!-- detail bottom -->
+    </section>
+    <div class="service-detail__mid"
+        style=" background-image: url('<?php echo _HOST_URL_TEMPLATES;?>/uploads/manga_banner.png');">
+        <div class="container">
+            <div class="service-detail__mid--inner">
+                <div class="service-detail__mid--content">
+                    <h2 class="detail-mid-heading">Dành cho Fan Manga</h2>
+                    <p class="detail-mid-desc"></p>
+                </div>
+                <div class="service-detail__cta">
+                    <a href="?module=store&action=book_cate&id=TL1" class="btn service-detail__mid-btn">Xem Ngay</a>
                 </div>
             </div>
         </div>
-        <!-- detail bottom -->
-    </section>
-
+    </div>
     <!-- feature 1-->
     <section class="feature">
         <div class="container">
@@ -320,7 +313,8 @@ $msg_type = getSessionFlash('msg_type');
             </div>
         </div>
         <!-- detail mid -->
-        <div class="service-detail__mid service-detail__mid--lightnovel">
+        <div class="service-detail__mid service-detail__mid--lightnovel"
+            style=" background-image: url('<?php echo _HOST_URL_TEMPLATES;?>/uploads/light_novel_banner.png');">
             <div class="container">
                 <div class="service-detail__mid--inner">
                     <div class="service-detail__mid--content">
@@ -720,7 +714,58 @@ $msg_type = getSessionFlash('msg_type');
         </div>
     </section>
 </main>
+<script>
+const slides = document.querySelector('.slides');
+const images = document.querySelectorAll('.slides img');
+const leftBtn = document.querySelector('.slide-left');
+const rightBtn = document.querySelector('.slide-right');
+const dotsContainer = document.querySelector('.dots');
 
+let index = 0;
+const total = images.length;
+
+// Tạo chấm tròn
+for (let i = 0; i < total; i++) {
+    const dot = document.createElement('span');
+    dot.classList.add('dot');
+    if (i === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => goToSlide(i));
+    dotsContainer.appendChild(dot);
+}
+
+const dots = document.querySelectorAll('.dot');
+
+function showSlide() {
+    slides.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach(dot => dot.classList.remove('active'));
+    dots[index].classList.add('active');
+}
+
+function nextSlide() {
+    index = (index + 1) % total;
+    showSlide();
+}
+
+function prevSlide() {
+    index = (index - 1 + total) % total;
+    showSlide();
+}
+
+function goToSlide(i) {
+    index = i;
+    showSlide();
+}
+
+rightBtn.addEventListener('click', nextSlide);
+leftBtn.addEventListener('click', prevSlide);
+
+// Tự động chạy từ phải sang trái
+let autoSlide = setInterval(nextSlide, 4000);
+
+// Dừng khi rê chuột vào, chạy lại khi rời chuột
+document.querySelector('.slideshow').addEventListener('mouseenter', () => clearInterval(autoSlide));
+document.querySelector('.slideshow').addEventListener('mouseleave', () => autoSlide = setInterval(nextSlide, 4000));
+</script>
 
 <?php 
 layout('footer_store');

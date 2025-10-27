@@ -207,7 +207,7 @@
     row-gap: 10px;
   }
   .service-detail__top--list {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     row-gap: 10px;
   }
   .detail-top-desc {
