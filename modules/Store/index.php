@@ -322,7 +322,7 @@ $msg_type = getSessionFlash('msg_type');
                         <p class="detail-mid-desc"></p>
                     </div>
                     <div class="service-detail__cta">
-                        <a href="#!" class="btn service-detail__mid-btn">Xem Ngay</a>
+                        <a href="?module=store&action=book_cate&id=TL1" class="btn service-detail__mid-btn">Xem Ngay</a>
                     </div>
                 </div>
             </div>

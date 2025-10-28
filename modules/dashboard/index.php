@@ -46,29 +46,53 @@ LIMIT 5;
 
 
 
-$topMonth = getAll("
-    SELECT s.ID, s.tenSach, s.tacGia, s.hinhAnh, SUM(ct.soLuong) AS tongSoLuongBan
-    FROM chitiethoadon AS ct
+
+
+
+*/ 
+
+$topMonth = getAll("SELECT s.ISBN, s.tenSach, tacgiasach.tenTacGia, s.hinhAnh, SUM(ct.soLuongSach) AS tongSoLuongBan
+    FROM hoadonchitiet AS ct
     JOIN hoadon AS hd ON ct.hoaDonId = hd.ID
-    JOIN sach AS s ON ct.sachId = s.ID
+    JOIN sach AS s ON ct.ISBN = s.ISBN
+    Join tacgiasach on tacgiasach.ID = s.tacGiaId
     WHERE MONTH(hd.ngayDatHang) = MONTH(CURDATE())
       AND YEAR(hd.ngayDatHang) = YEAR(CURDATE())
-    GROUP BY s.ID, s.tenSach, s.tacGia, s.hinhAnh
+    GROUP BY s.ISBN, s.tenSach, tacgiasach.tenTacGia, s.hinhAnh
     ORDER BY tongSoLuongBan DESC
     LIMIT 5
 ");
 
-$topWeek = getAll("
-    SELECT s.ID, s.tenSach, s.tacGia, s.hinhAnh, SUM(ct.soLuong) AS tongSoLuongBan
-    FROM chitiethoadon AS ct
+$topWeek = getAll("SELECT s.ISBN, s.tenSach, tacgiasach.tenTacGia, s.hinhAnh, s.gia, SUM(ct.soLuongSach) AS tongSoLuongBan
+    FROM hoadonchitiet AS ct
     JOIN hoadon AS hd ON ct.hoaDonId = hd.ID
-    JOIN sach AS s ON ct.sachId = s.ID
+     JOIN sach AS s ON ct.ISBN = s.ISBN
+     Join tacgiasach on tacgiasach.ID = s.tacGiaId
     WHERE YEARWEEK(hd.ngayDatHang, 1) = YEARWEEK(CURDATE(), 1)
-    GROUP BY s.ID, s.tenSach, s.tacGia, s.hinhAnh
+    GROUP BY s.ISBN, s.tenSach, tacgiasach.tenTacGia, s.hinhAnh, s.gia
     ORDER BY tongSoLuongBan DESC
     LIMIT 5
 ");
-*/ 
+
+
+
+$topUsser_order = getAll("SELECT 
+    nd.tenNguoiDung AS tenKhachHang,
+    SUM(hd.tongTien) AS tongTien
+FROM hoadon AS hd
+JOIN nguoidung AS nd ON hd.nguoiDungId = nd.ID
+
+GROUP BY nd.ID, nd.tenNguoiDung
+ORDER BY tongTien DESC
+LIMIT 3;
+");
+//--WHERE hd.trangThaiHoaDonId = 4  -- chỉ tính các đơn đã hoàn tất (nếu có trạng thái này)
+
+
+$totalUser = getOne("SELECT COUNT(*) AS total FROM nguoidung")['total'];
+$totalBook = getOne("SELECT COUNT(soLuong) AS total FROM sach")['total'];
+$totalOrder = getOne("SELECT COUNT(*) AS total FROM hoadon")['total'];
+$totalRevenue = getOne("SELECT SUM(tongTien) AS total FROM hoadon")['total'];
 
 
 ?>
@@ -96,10 +120,10 @@ $topWeek = getAll("
                 </a>
             </div>
             <div class="stat-card__number">
-                <p class="stat-card__number--total">1600</p>
-                <p class="stat-card__number--percent">+120%</p>
+                <p class="stat-card__number--total">Tổng số người dùng</p>
+                <p class="stat-card__number--percent"><?php echo $totalUser; ?></p>
             </div>
-            <h3 class="stat-card__title">Tổng số lượng sách</h3>
+
         </div>
         <div class="stat-card stat-card--black">
             <div class="stat-card__wrapper">
@@ -111,10 +135,10 @@ $topWeek = getAll("
                 </a>
             </div>
             <div class="stat-card__number">
-                <p class="stat-card__number--total">1600</p>
-                <p class="stat-card__number--percent">+120%</p>
+                <p class="stat-card__number--total">Số lượng sách</p>
+                <p class="stat-card__number--percent"><?php echo $totalBook; ?></p>
             </div>
-            <h3 class="stat-card__title">Tổng số lượng sách</h3>
+
         </div>
         <div class="stat-card stat-card--orange">
             <div class="stat-card__wrapper">
@@ -126,10 +150,10 @@ $topWeek = getAll("
                 </a>
             </div>
             <div class="stat-card__number">
-                <p class="stat-card__number--total">1600</p>
-                <p class="stat-card__number--percent">+120%</p>
+                <p class="stat-card__number--total">Số đơn hàng</p>
+                <p class="stat-card__number--percent"><?php echo $totalOrder; ?></p>
             </div>
-            <h3 class="stat-card__title">Tổng số lượng sách</h3>
+
         </div>
         <div class="stat-card stat-card--black">
             <div class="stat-card__wrapper">
@@ -141,10 +165,10 @@ $topWeek = getAll("
                 </a>
             </div>
             <div class="stat-card__number">
-                <span class="stat-card__number--total">1600</span>
-                <span class="stat-card__number--percent">+120%</span>
+                <span class="stat-card__number--total">Doanh thu</span>
+                <span class="stat-card__number--percent"><?php echo $totalRevenue; ?></span>
             </div>
-            <h3 class="stat-card__title">Tổng số lượng sách</h3>
+
         </div>
     </section>
 
@@ -158,34 +182,21 @@ $topWeek = getAll("
                         <th>TOP</th>
                         <th>Tên Khách Hàng</th>
                         <th>Tổng Tiền</th>
-                        <th>RANK</th>
+
                     </tr>
                 </thead>
                 <tbody>
+                    <?php foreach($topUsser_order as $key => $item): ?>
                     <tr>
-                        <td class="dashboard-col-top-user">1</td>
-                        <td>Nguyễn Văn A</td>
-                        <td>25.000.000 VNĐ</td>
-                        <td>
+                        <td class="dashboard-col-top-user"><?php echo $key+1;?></td>
+                        <td><?php echo $item['tenKhachHang'];?></td>
+                        <td><?php echo $item['tongTien'];?></td>
+                        <!-- <td>
                             <img src="./assets/img/thachdau-icon.png" alt="" class="table-rank-img" />
-                        </td>
+                        </td> -->
                     </tr>
-                    <tr>
-                        <td class="dashboard-col-top-user">2</td>
-                        <td>NHÀ SÁCH TNA</td>
-                        <td>16.000.000 VNĐ</td>
-                        <td>
-                            <img src="./assets/img/thachdau-icon.png" alt="" class="table-rank-img" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="dashboard-col-top-user">3</td>
-                        <td>NGUYỄN VĂN C</td>
-                        <td>14.000.000 VNĐ</td>
-                        <td>
-                            <img src="./assets/img/thachdau-icon.png" alt="" class="table-rank-img" />
-                        </td>
-                    </tr>
+                    <?php endforeach;?>
+
                 </tbody>
             </table>
 
@@ -210,40 +221,19 @@ $topWeek = getAll("
                 </tr>
             </thead>
             <tbody>
+                <?php foreach($topMonth as $key => $item): ?>
                 <tr>
                     <td class="dashboard-col-top-user dashboard-col-top-book">
-                        1
+                        <?php echo $key+1;?>
                     </td>
-                    <td>Thanh Gươm Diệt Quỷ Vol.22</td>
-                    <td>Koyoharu Gotouge, Aya Yajima</td>
+                    <td><?php echo $item['tenSach'];?></td>
+                    <td><?php echo $item['tenTacGia'];?></td>
                     <td>
-                        <img src="./assets/img/sach1.PNG" alt="" class="table-rank-img table-rank-img-mid" />
+                        <img src=" <?php echo $item['hinhAnh'];?>" alt="" class="table-rank-img table-rank-img-mid" />
                     </td>
-                    <td>2543</td>
+                    <td><?php echo $item['tongSoLuongBan'];?></td>
                 </tr>
-                <tr>
-                    <td class="dashboard-col-top-user dashboard-col-top-book">
-                        2
-                    </td>
-                    <td>NHÀ SÁCH TNA</td>
-                    <td>Koyoharu Gotouge, Aya Yajima</td>
-                    <td>
-                        <img src="./assets/img/sach1.jpg" alt="" class="table-rank-img table-rank-img-mid" />
-                    </td>
-                    <td>2534</td>
-                </tr>
-
-                <tr>
-                    <td class="dashboard-col-top-user dashboard-col-top-book">
-                        3
-                    </td>
-                    <td>NGUYỄN VĂN C</td>
-                    <td>Koyoharu Gotouge, Aya Yajima</td>
-                    <td>
-                        <img src="./assets/img/sach2.jpg" alt="" class="table-rank-img table-rank-img-mid" />
-                    </td>
-                    <td>2523</td>
-                </tr>
+                <?php endforeach;?>
             </tbody>
         </table>
     </div>
@@ -252,72 +242,27 @@ $topWeek = getAll("
         <h2 class="dashboard__mid-title">Top Sách Nỗi Bậc Tuần</h2>
         <div class="dashboard__mid-list">
             <!-- item 1 -->
+            <?php foreach($topWeek as $key => $item): ?>
             <article class="dashboard__mid-item">
-                <div class="dashboard__mid-toprank">01</div>
-                <img src="./assets/img/sach1.jpg" alt="" class="dashboard__mid-thumbnail" />
+                <div class="dashboard__mid-toprank"><?php echo $key+1;?></div>
+                <img src="<?php echo $item['hinhAnh'];?>" alt="" class="dashboard__mid-thumbnail" />
                 <div class="dashboard__mid-detail">
                     <h3 class="dashboard__mid-name">
-                        Thanh Gươm Diệt Quỷ Vol.22
+                        <?php echo $item['tenSach'];?>
                     </h3>
                     <p class="dashboard__mid-author">
-                        Koyoharu Gotouge, Aya Yajima
+                        <?php echo $item['tenTacGia'];?>
                     </p>
-                    <p class="dashboard__mid-price">45.000 đ</p>
+                    <p class="dashboard__mid-price"><?php echo $item['gia'];?> đ</p>
                 </div>
             </article>
-            <!-- item 2 -->
-            <article class="dashboard__mid-item">
-                <div class="dashboard__mid-toprank">01</div>
-                <img src="./assets/img/sach1.jpg" alt="" class="dashboard__mid-thumbnail" />
-                <div class="dashboard__mid-detail">
-                    <h3 class="dashboard__mid-name">
-                        Thanh Gươm Diệt Quỷ Vol.22
-                    </h3>
-                    <p class="dashboard__mid-author">
-                        Koyoharu Gotouge, Aya Yajima
-                    </p>
-                    <p class="dashboard__mid-price">45.000 đ</p>
-                </div>
-            </article>
-            <!-- item 3 -->
-            <article class="dashboard__mid-item">
-                <div class="dashboard__mid-toprank">01</div>
-                <img src="./assets/img/sach1.jpg" alt="" class="dashboard__mid-thumbnail" />
-                <div class="dashboard__mid-detail">
-                    <h3 class="dashboard__mid-name">
-                        Thanh Gươm Diệt Quỷ Vol.22
-                    </h3>
-                    <p class="dashboard__mid-author">
-                        Koyoharu Gotouge, Aya Yajima
-                    </p>
-                    <p class="dashboard__mid-price">45.000 đ</p>
-                </div>
-            </article>
+            <?php endforeach; ?>
         </div>
     </div>
 </div>
 <!-- dashboard bottom -->
 <div class="dashboard__bottom">
-    <div class="dashboard__bottom-wrapper">
-        <!-- left -->
-        <div class="dashboard__bottom-left">
-            <div class="barchart-wrapper">
-                <canvas id="myChart" class="barchart"></canvas>
-            </div>
-            <h3 class="barchart-title">Người Đăng Ký Mới</h3>
-            <p class="barchart-desc"><span>(+23%) so với tuần trước</span></p>
-        </div>
-        <!-- right -->
-        <div class="dashboard__bottom-right">
-            <h3 class="linechart-title">Người Đăng Ký Mới</h3>
-            <p class="linechart-desc">
-                <span>(+23%) so với tuần trước</span>
-            </p>
-            <div class="linechart-wrapper">
-                <canvas id="myChart-right" class="linechart"></canvas>
-            </div>
-        </div>
-    </div>
+
 </div>
 </div>
 </main>
