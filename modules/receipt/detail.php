@@ -193,6 +193,8 @@ $msg_type = getSessionFlash('msg_type');
             style="background-color: #33CC66;">Xác nhận đơn</a>
         <a href="?module=receipt&action=cancel&id=<?php echo $getId;?>" class="book-editor__add btn"
             style="background-color: #CC3333;">Huỷ đơn hàng</a>
+        <a href="?module=receipt&action=comp&id=<?php echo $getId;?>" class="book-editor__add btn"
+            style="background-color: #cc7d33ff;">Đã giao</a>
         <a href="?module=store&action=thank_you&id=<?php echo $getId;?>&srcp=prcpt" target="_blank"
             class="book-editor__add btn" style="background-color: #0099FF;">🖨️ In hoá đơn</a>
     </div>

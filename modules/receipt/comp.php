@@ -6,6 +6,7 @@ if(!defined('_KTHopLe'))
 
 $getdata = filterData('get');
 $getId = $getdata['id'];
+
 $get_mail_from_recep = getOne("SELECT nguoidung.email
 FROM hoadon
 INNER JOIN nguoidung ON nguoidung.ID = hoadon.nguoiDungId
@@ -13,7 +14,7 @@ WHERE hoadon.ID = '$getId';
 ");
 
 $data_update = [
-    'trangThaiHoaDonId' => 'TTDH4'
+    'trangThaiHoaDonId' => 'TTDH6'
 ];
 $condition = "ID='" . $getId . "'";
 
@@ -21,10 +22,9 @@ $updateStatus = update('hoadon', $data_update, $condition);
 
  if( $updateStatus){
     $emailTo = $get_mail_from_recep['email'];
-    $subject = 'Đơn hàng ' . $getId . ' Đã bị huỷ';
-    $content = 'Lý do: do vi phạm chính sách hoặc sản phẩm hết hàng, </>';
-    $content .= 'Vui lòng liên hệ bộ phận CSKH để được giải đáp.  </br>';
-    $content .= 'Xin lỗi vì sự bất tiện này!!!';
+    $subject = 'Đơn hàng ' . $getId . ' Đã giao thành công';
+    $content = 'Cảm ơn bạn đã luôn tin tưởng và ủng hộ K-BOOKS!^^, </>';
+    $content .= 'Chúc bạn có những giây phút thư giãn tuyệt vời nhất!!';
     //gửi email
     sendMail($emailTo,$subject,$content);
     redirect('?module=receipt&action=detail&id=' . $getId);
