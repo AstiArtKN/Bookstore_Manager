@@ -200,7 +200,7 @@ $msg_type = getSessionFlash('msg_type');
                     <td><?php echo $item['gioiTinh']; ?></td>
                     <td><?php echo $item['trangThai']; ?></td>
                     <td><?php echo $item['tenQuyenHan']; ?></td>
-                    <td> <a href="?module=users&action=permission&id=<?php echo $item['ID'];?>" class="btn btn-setting">
+                    <td> <a href="?module=users&action=edit&id=<?php echo $item['ID'];?>" class="btn btn-setting">
                             <i class="fa-solid fa-gears"></i>
                         </a></td>
                     <td>

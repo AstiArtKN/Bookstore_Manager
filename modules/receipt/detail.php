@@ -26,7 +26,7 @@ $getId = $getdata['id'];
 
 
 //xử lý trang
-$maxData = getRows("SELECT ISBN FROM hoadonchitiet");
+$maxData = getRows("SELECT ISBN FROM hoadonchitiet WHERE hoaDonId = '$getId'");
 $perPage = 10;//so dong du lieu
 $maxPage = ceil($maxData/$perPage);
 $offset = 0;
