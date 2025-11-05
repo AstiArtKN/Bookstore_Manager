@@ -3,7 +3,21 @@ date_default_timezone_set('Asia/Ho_Chi_Minh');
 session_start();//tạo mới phiên làm việc hoặc chạy tiếp phiên đã có
 ob_start();//giúp tránh trường hợp bị lỗi khi dùng hàm liên quan header, cookie
 
+
+// --- CHẾ ĐỘ BẢO TRÌ HỆ THỐNG ---
+$maintenance_mode = false; // true = bật, false = tắt
+
+
+
+
 require_once './config.php';
+
+if ($maintenance_mode ) {
+    // Nếu không phải admin hoặc máy được phép thì chuyển hướng
+    include './modules/maintenance/index.php';
+    exit();
+}
+
 
 require_once './includes/connect.php';
 require_once './includes/database.php';
